@@ -1,0 +1,25 @@
+
+
+.fluid-content {
+  height: 100vh;
+}
+
+.header {
+  background: linear-gradient(270deg, #1CA392 0%, #9CCCB2 43.23%, #1CA392 92.71%), #FFFFFF;
+  height: 85px;
+}
+
+.header .nav-link {
+  color: white;
+}
+.disabled {
+  color: #A8A8A8;
+}
+
+.image-container {
+  background: url(./assets/image/login-image.jpg) no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
