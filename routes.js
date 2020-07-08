@@ -10,6 +10,7 @@ route.get('/', homeController.index)
 //Rotas cadastro
 route.get('/usuarios/novo-usuario', cadastroController.index);
 route.get('/login', cadastroController.indexLogin);
+route.get('/login-noToken', cadastroController.logout);
 route.post('/home/usuarios', cadastroController.register);
 route.post('/usuarios', cadastroController.login);
 

@@ -49,9 +49,8 @@ class Cadastro {
   }
 
   async register() {
-    console.log('entrou no register')
+    
     await this.submit();
-    console.log(this.errors);
     if(this.errors.length > 0) return;
     const salt = bcryptjs.genSaltSync();
     this.passw = bcryptjs.hashSync(this.passw, salt);
@@ -68,12 +67,11 @@ class Cadastro {
       const verify = await CadastroModel.findOne({username: this.body.username});
       if (verify) this.errors.push('Usuário já existe');
     } catch (error) {
-      console.log('errorUserExists', error);
+      console.log(error);
     }
   }
 
   cpfValidator(){
-    console.log('entra aqui?');
     const cpfProvider = this.body.cpf;
     let soma;
     let resto;
@@ -111,19 +109,18 @@ class Cadastro {
     } else if (this.passw.length === 0) {
       this.errors.push('Senha obrigatória');
     }
-    console.log('name aqui', this.body.name.length);
+    
     if ((this.body.name.length <= 3 || this.body.name.length >= 70) && this.body.name.length !== 0) {
       this.errors.push('O nome precisa ter entre 3 e 70 caracteres');
     } else if (this.body.name.length === 0) {
       this.errors.push('Nome é obrigatório');
     }
-    console.log('matricula aqui', this.body.matricula.length);
+    
     if ((this.body.matricula.length <= 3 || this.body.matricula.length >= 15) && this.body.matricula.length !== 0) {
       this.errors.push('A Matricula precisa ter entre 3 e 15 caracteres');
     } else if (this.body.matricula.length === 0) {
       this.errors.push('Matricula é obrigatório');
     }
-    console.log('typeUser aqui', this.body.typeUser.length);
 
     if (this.body.typeUser.length === 0) {
       this.errors.push('Tipo de usuário é obrigatório');
@@ -132,8 +129,6 @@ class Cadastro {
     }
 
     const verifyCPF = this.cpfValidator();
-    console.log('verifyCPF aqui', verifyCPF);
-    console.log('cpf aqui', this.body.cpf.length);
 
     if (!verifyCPF && this.body.cpf.length !== 0) {
       this.errors.push('CPF é inválido');
@@ -146,7 +141,6 @@ class Cadastro {
 
 
   async login() {
-    console.log('entrou no login')
     await this.validate();
     if(this.errors.length > 0) return;
 
@@ -155,7 +149,6 @@ class Cadastro {
 
   async getUser() {
     this.user = await CadastroModel.findOne({username: this.body.username});
-    console.log('getUser', this.user);
     if (!this.user) {
       this.errors.push('Usuário não cadastrado. Entre em contato com um administrador');
       return false;
@@ -190,7 +183,6 @@ class Cadastro {
         this.body[key] = '';
       }
     }
-    console.log('cleanUp', this.user);
 
     if(this.user) {
       this.body = this.user;

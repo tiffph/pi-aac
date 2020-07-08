@@ -40,13 +40,18 @@ exports.login = async function(req, res) {
       });
       return;
     }
+
     req.session.user = login.user;
     req.session.save(function() {
-      return res.redirect('/usuarios');
+      return res.render('includes/users');
     });
-    return res.send(login.errors);
   } catch (error) {
     console.log(error);
     return res.render('404');
   }
+}
+
+exports.logout = (req, res) => {
+  req.session.destroy();
+  res.redirect('/login');
 }
