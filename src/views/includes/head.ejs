@@ -72,7 +72,7 @@
       font-size: 12px;
     }
     a, a:focus, a:hover {
-      color: inherit;
+      color: #494949;
       text-decoration: none;
     }
     .card .card-body {
@@ -88,11 +88,24 @@
     }
     .card .card-body p{
       width: 500px;
-      margin: 30px auto;
+      margin: 30px auto 60px;
     }
     .btn:focus {
       outline: none;
       box-shadow: none;
+    }
+    .content-header-breadcrumb {
+      display: flex;
+      justify-content: space-between;
+    }
+    .content-header-breadcrumb span {
+      padding: 40px 0 10px;
+      text-decoration: underline;
+      margin-bottom: 1rem;
+    }
+    .content-header-breadcrumb span a{
+      color: #1CA392;
+      font-size: 16px;
     }
     ol.breadcrumb {
       background: transparent;
@@ -115,6 +128,8 @@
       padding: 0;
       font-size: 11px;
       text-decoration: underline;
+    }
+    .buttons-action .btn.left-button a{
       color: #1CA392;
     }
     .buttons-action .btn.right-button {
@@ -124,10 +139,13 @@
       color: white;
       border-radius: 30px;
     }
-    .form-control, .form-group, .form-row {
-      font-size: 14px;
+    .card .form-control, .card .form-group, .card .form-row, .card .input-group select{
+      font-size: 14px !important;
       height: 40px;
       color: #494949 !important;
+    }
+    .input-group select{
+      cursor: pointer;
     }
     .full-screen {
       width: 80%;
@@ -144,7 +162,13 @@
       text-align: left;
       margin: 2px;
     }
-
+    .table .thead-dark th {
+      font-size: 14px;
+    }
+    .full-screen .card form{
+      width: 40%;
+      margin: 0 auto;
+    }
     /* LOGIN */
     .image-container {
       /* background: url(../assets/image/login-image.jpg) no-repeat; */
@@ -175,16 +199,19 @@
     .screen-user .users-table {
       box-shadow: 0px 0px 8px #C5BFBF;
     }
-
+    .screen-user .users-table .input-group{
+      box-shadow: 0px 0px 8px #C5BFBF;
+    }
 
     /* CRIAR USUÁRIO */
-    .signup-user .card {
+    .signup-user .card, .aac-content .card {
       height: auto;
       min-height: 700px;
     }
-    .signup-user .card .signup-form{
-      width: 30%;
-      margin: 0 auto;
+
+    /* AAC CREATE */
+    .aac-content .buttons-action {
+      margin-top: 60px;
     }
 
 
@@ -209,17 +236,18 @@
         <span class="material-icons school">school</span>
         <span class="text">SENAI</span>
       </div>
-      <% if(!user) { %>
       <ul class="nav">
+        <% if(user) { %>
         <li class="nav-item">
-          <a class="nav-link active" href="#">Active</a>
+          <a class="nav-link" href="/usuarios">Usuários</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
+          <a class="nav-link" href="/aac">Atividades Complementares</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Sair</a>
+          <a class="nav-link" href="/login-noToken">Sair</a>
         </li>
+        <%} else {%>
         <li class="nav-item">
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
         </li>

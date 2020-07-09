@@ -18,18 +18,28 @@ exports.register = async function(req, res) {
       });
       return;
     }
-    req.session.save(function() {
-      return res.render('includes/users');
-    });
+    req.flash('success', 'Cadastro concluído com sucesso');
+    req.session.save(() => res.redirect('back'));
     return res.send(cadastro.errors);
   } catch (error) {
     console.log(error);
     return res.render('404');
   }
 }
+
+exports.edit = async (req, res) => {
+  
+}
   
 exports.login = async function(req, res) {
   try {
+    if(req.session.user) {
+      if (req.session.user.typeUser === 'Aluno') {
+        return res.render('includes/users');
+      } else {
+        return res.render('includes/signup-users')
+      }
+    }
     const login = new Cadastro(req.body);
     await login.login();
 

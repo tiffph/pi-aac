@@ -1,0 +1,57 @@
+<%- include('head') %>
+
+<div class="full-screen aac-content">
+  <div class="container-fluid">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/aac">Atividades Acadêmicas Complementares</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Criar Atividade</li>
+      </ol>
+    </nav>
+    <div class="card">
+      <%- include('messages') %>
+      <div class="card-body">
+        <h5>Cadastro de atividade complementar</h5>
+        <p>
+          Lorem ipsum a iaculis purus curae mi est habitasse nam auctor sed, class luctus feugiat sociosqu nulla est
+          accumsan ac nullam scelerisque. netus nullam accumsan imperdiet sit suscipit rhoncus accumsan, mi velit platea
+          urna tristiq.
+        </p>
+
+        <form class="signup-form" action="/home/aac" method="POST">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="form-group">
+            <input type="text" placeholder="Nome completo" class="form-control" id="atividade" name="atividade">
+          </div>
+          <div class="form-group">
+            <select class="form-control" placeholder="Modalidade" id="modalidade" name="modalidade">
+              <option selected>Ensino</option>
+              <option>Pesquisa</option>
+              <option>Extensão</option>
+            </select>
+          </div>
+          <div class="form-group tiny">
+            <div class="form-row">
+              <div class="col">
+                <input type="text" placeholder="Carga limite" class="form-control" id="cargaLimite" name="cargaLimite">
+              </div>
+              <div class="col">
+                <input type="text" placeholder="Horas equivalentes" class="form-control" id="horasEquivalentes" name="horasEquivalentes">
+              </div>
+            </div>
+          </div>
+          <span class="buttons-action">
+            <button type="button" class="btn left-button">
+              <a href="/aac">Cancelar</a>
+            </button>
+            <button type="submit" class="btn right-button">
+              Cadastrar
+            </button>
+          </span>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('footer') %>
