@@ -2,7 +2,19 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcryptjs = require('bcryptjs')
 
-const CadastroSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
+  name: { 
+    type: String,
+    required: true
+  },
+  matricula: { 
+    type: String,
+    required: true
+  },
+  cpf: { 
+    type: String,
+    required: true
+  },
   username: { 
     type: String,
     required: true
@@ -11,36 +23,16 @@ const CadastroSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  name: { 
-    type: String,
-    required: true
-  },
-  cpf: { 
-    type: String,
-    required: true
-  },
-  matricula: { 
-    type: String,
-    required: true
-  },
   typeUser: { 
-    type: String,
-    required: true
-  },
-  modalidade: { 
-    type: String,
-    required: false
-  },
-  password: { 
     type: String,
     required: true
   }
 });
 
-const CadastroModel = mongoose.model('Cadastro', CadastroSchema);
+const UserModel = mongoose.model('User', UserSchema);
 
 
-class Cadastro {
+class User {
   constructor(body) {
     this.body = body;
     this.errors = [];
@@ -48,9 +40,11 @@ class Cadastro {
     this.passw = this.body.password;
   }
 
+  //CREATE NEW
   async register() {
-    
+    this.cleanUp();
     await this.submit();
+    
     if(this.errors.length > 0) return;
     const salt = bcryptjs.genSaltSync();
     this.passw = bcryptjs.hashSync(this.passw, salt);
@@ -59,14 +53,15 @@ class Cadastro {
     if (this.errors.length > 0) return;
 
     this.body.password = this.passw;
-    this.user = await CadastroModel.create(this.body);
+    this.user = await UserModel.create(this.body);
   }
 
   async userExists() {
     try {
-      const verify = await CadastroModel.findOne({username: this.body.username});
+      const verify = await UserModel.findOne({username: this.body.username});
       if (verify) this.errors.push('Usuário já existe');
     } catch (error) {
+      this.errors.push('Algo aconteceu. Tente novamente mais tarde.');
       console.log(error);
     }
   }
@@ -94,11 +89,6 @@ class Cadastro {
   }
 
   submit() {
-    this.cleanUp();
-    console.log(this.body);
-    for(let i in this.body) {
-      console.log(`i = ${this.body[i]}, length = ${this.body[i].length}, typeof ${typeof this.body[i]}`);
-    }
     if (!validator.isEmail(this.body.username) && this.body.username.length !== 0) {
       this.errors.push('Email inválido');
     } else if (this.body.username.length === 0) {
@@ -122,10 +112,8 @@ class Cadastro {
       this.errors.push('Matricula é obrigatório');
     }
 
-    if (this.body.typeUser.length === 0) {
+    if (this.body.typeUser === '') {
       this.errors.push('Tipo de usuário é obrigatório');
-    // } else if (this.body.typeUser.length === 0) {
-    //   this.errors.push('Tipo de usuário é obrigatório');
     }
 
     const verifyCPF = this.cpfValidator();
@@ -138,8 +126,27 @@ class Cadastro {
     return;
   }
 
+  // EDIT
+  async edit(id) {
+    if(typeof id !== 'string') return;
+    this.submit();
+    if(this.errors.length > 0) return;
+    this.user = await UserModel.findByIdAndUpdate(id, this.body, { new: true });
+  }
 
+  async searchId(id) {
+    try {
+      if(typeof id !== 'string') return;
+      const userId = await UserModel.findById(id);
 
+      return userId;
+    } catch (error) {
+      console.log(error);
+      this.errors.push('Algo aconteceu. Tente novamente mais tarde.');
+    }
+  }
+
+  // LOGIN
   async login() {
     await this.validate();
     if(this.errors.length > 0) return;
@@ -148,7 +155,7 @@ class Cadastro {
   }
 
   async getUser() {
-    this.user = await CadastroModel.findOne({username: this.body.username});
+    this.user = await UserModel.findOne({username: this.body.username});
     if (!this.user) {
       this.errors.push('Usuário não cadastrado. Entre em contato com um administrador');
       return false;
@@ -193,11 +200,15 @@ class Cadastro {
         name: this.body.name,
         cpf: this.body.cpf,
         matricula: this.body.matricula,
-        typeUser: this.body.typeUser,
-        modalidade: this.body.modalidade ? this.body.modalidade : ''
+        typeUser: this.body.typeUser
       }
     }
   }
+
+  async searchUsers() {
+    const usersList = await UserModel.find().sort({ criadoEm: -1});
+    return usersList;
+  }
 }
 
-module.exports = Cadastro;
+module.exports = User;

@@ -15,44 +15,27 @@
             <tr>
               <th>Nome</th>
               <th>CPF</th>
-              <th>Matrícula</th>
+              <th class="text-center">Matrícula</th>
               <th>Email</th>
-              <th>Modalidade</th>
+              <th class="text-center">Modalidade</th>
               <th></th>
             </tr>
           </thead>
-      
+            
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td><span class="material-icons edit">
-                <a href="/usuarios/edit">edit</a>
-              </span></td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-              <td>@fat</td>
-              <td><span class="material-icons edit">
-                <a href="/usuarios/edit">edit</a>
-              </span></td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-              <td><span class="material-icons edit">
-                <a href="/usuarios/edit">edit</a>
+            <% usersList.forEach(user => {%>
+              <tr>
+                <td class="font-weight-bold"><%= user.name %></td>
+                <td><%= user.cpf %></td>
+                <td class="text-center"><%= user.matricula %></td>
+                <td><%= user.username %></td>
+                <td class="text-center"><%= user.typeUser %></td>
+                <td><span class="material-icons edit">
+                  <a href="/usuarios/edit/<%= user._id %>">edit</a>
                 </span></td>
-            </tr>
+              </tr>
+            <%}); %>
+
           </tbody>
         </table>
       </div>

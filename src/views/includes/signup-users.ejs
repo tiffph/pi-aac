@@ -5,41 +5,62 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/usuarios">Usuários</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Criar usuário</li>
+        <% if(userId) {%>
+          <li class="breadcrumb-item active" aria-current="page">Editar usuário</li>
+        <% } else {%>
+          <li class="breadcrumb-item active" aria-current="page">Criar usuário</li>
+        <% }%>
       </ol>
     </nav>
     <div class="card">
       <%- include('messages') %>
+      <% if(userId) {%>
+        <div style="width: 100%;">
+          <div class="alert alert-warning" style="margin: 0 auto 1rem;">
+            <%= `Você está editando o usuário ${userId.name}` %>
+          </div>
+        </div>
+      <% }%>
       <div class="card-body">
-        <h5>Cadastro de usuário</h5>
+        <% if(userId) {%>
+          <h5>Edição de usuário</h5>
+        <% } else {%>
+          <h5>Cadastro de usuário</h5>
+        <% }%>
         <p>
           Lorem ipsum a iaculis purus curae mi est habitasse nam auctor sed, class luctus feugiat sociosqu nulla est
           accumsan ac nullam scelerisque. netus nullam accumsan imperdiet sit suscipit rhoncus accumsan, mi velit platea
           urna tristiq.
         </p>
 
-        <form class="signup-form" action="/home/usuarios" method="POST">
+        <form class="signup-form" action="/usuarios" method="POST">
+        <!-- <%= userId %> -->
+
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="form-group">
-            <input type="text" placeholder="Nome completo" class="form-control" id="name" name="name">
+            <input value="<%= userId.name %>" type="text" placeholder="Nome completo" class="form-control" id="name" name="name">
           </div>
           <div class="form-group tiny">
             <div class="form-row">
               <div class="col">
-                <input type="text" placeholder="Matricula" class="form-control" id="matricula" name="matricula">
+                <input value="<%= userId.name %>" type="text" placeholder="Matricula" class="form-control" id="matricula" name="matricula">
               </div>
               <div class="col">
-                <input type="text" placeholder="CPF" class="form-control" id="cpf" name="cpf">
+                <input value="<%= userId.name %>" type="text" placeholder="CPF" class="form-control" id="cpf" name="cpf">
                 <small id="cpfFormat" class="form-text text-muted">Ex: 00000000000</small>
               </div>
             </div>
           </div>
           <div class="form-group">
-            <input type="email" placeholder="Email" class="form-control" id="username" name="username">
+            <input value="<%= userId.name %>" type="email" placeholder="Email" class="form-control" id="username" name="username">
           </div>
           <div class="form-group">
-            <input type="password" placeholder="Senha" class="form-control" id="password" name="password">
-          </div>
+            <% if(userId) {%>
+              <input type="password" placeholder="Senha" class="form-control" id="password" name="password">
+            <%} else {%>
+              <input type="password" placeholder="*********" disabled class="form-control" id="password" name="password">
+            <%}%>
+            </div>
           <div class="input-group">
             <div class="input-group-append">
               <label class="input-group-text" for="inputGroupSelect02">Tipo de usuário</label>
@@ -55,9 +76,15 @@
             <button type="button" class="btn left-button">
               <a href="/usuarios">Cancelar</a>
             </button>
-            <button type="submit" class="btn right-button">
-              Cadastrar
-            </button>
+            <% if(userId) {%>
+              <button type="submit" class="btn right-button">
+                Atualizar
+              </button>
+            <% } else {%>
+              <button type="submit" class="btn right-button">
+                Cadastrar
+              </button>
+            <% }%>
           </span>
         </form>
       </div>
