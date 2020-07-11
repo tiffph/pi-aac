@@ -4,12 +4,14 @@
   <div class="container-fluid">
     <nav aria-label="breadcrumb" class="content-header-breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page">Usuários</li>
+        <li class="breadcrumb-item active" aria-current="page">Usuários (<%= usersList.length %>)
+        </li>
       </ol>
+      
       <span><a href="/usuarios/novo-usuario">Criar novo</a></span>
     </nav>
     <div class="users-table">
-      <div class="table-responsive">
+      <div class="table-responsive set-margin">
         <table class="table table-borderless table-hover">
           <thead class="thead-dark">
             <tr>

@@ -1,0 +1,14 @@
+{
+  "atividade": { 
+    "type": "String",
+    "required": true
+  },
+  "modalidade": { 
+    "type": "String",
+    "required": true
+  },
+  "cargaLimite": { 
+    "type": "String",
+    "required": true
+  }
+}

@@ -1,34 +1,11 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const bcryptjs = require('bcryptjs')
+const bcryptjs = require('bcryptjs');
+const getSchema = require('../../common/user-schema.json');
 
-const UserSchema = new mongoose.Schema({
-  name: { 
-    type: String,
-    required: true
-  },
-  matricula: { 
-    type: String,
-    required: true
-  },
-  cpf: { 
-    type: String,
-    required: true
-  },
-  username: { 
-    type: String,
-    required: true
-  },
-  password: { 
-    type: String,
-    required: true
-  },
-  typeUser: { 
-    type: String,
-    required: true
-  }
-});
+const UserSchema = new mongoose.Schema(getSchema);
 
+mongoose.set('useFindAndModify', false);
 const UserModel = mongoose.model('User', UserSchema);
 
 
@@ -89,16 +66,20 @@ class User {
   }
 
   submit() {
+    console.log(this.body);
     if (!validator.isEmail(this.body.username) && this.body.username.length !== 0) {
       this.errors.push('Email inválido');
     } else if (this.body.username.length === 0) {
       this.errors.push('Email é obrigatório');
     }
-    if ((this.passw.length <= 3 || this.passw.length >= 50) && this.passw.length !== 0) {
-      this.errors.push('A senha precisa ter entre 3 e 50 caracteres');
-    } else if (this.passw.length === 0) {
-      this.errors.push('Senha obrigatória');
+    if(this.passw) {
+      if ((this.passw.length <= 3 || this.passw.length >= 50) && this.passw.length !== 0) {
+        this.errors.push('A senha precisa ter entre 3 e 50 caracteres');
+      } else if (this.passw.length === 0) {
+        this.errors.push('Senha obrigatória');
+      }
     }
+    
     
     if ((this.body.name.length <= 3 || this.body.name.length >= 70) && this.body.name.length !== 0) {
       this.errors.push('O nome precisa ter entre 3 e 70 caracteres');
@@ -128,7 +109,16 @@ class User {
 
   // EDIT
   async edit(id) {
+    console.log('typeof id', typeof id);
     if(typeof id !== 'string') return;
+    const userId = await UserModel.findById(id);
+
+    if(userId.username !== this.body.username) {
+      await this.userExists();
+      if (this.errors.length > 0) return;
+    }
+    
+
     this.submit();
     if(this.errors.length > 0) return;
     this.user = await UserModel.findByIdAndUpdate(id, this.body, { new: true });
@@ -148,6 +138,7 @@ class User {
 
   // LOGIN
   async login() {
+    console.log('login')
     await this.validate();
     if(this.errors.length > 0) return;
 

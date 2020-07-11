@@ -1,24 +1,7 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+const getSchema = require('../../common/aac-schema.json');
 
-const CreateSchema = new mongoose.Schema({
-  atividade: { 
-    type: String,
-    required: true
-  },
-  modalidade: { 
-    type: String,
-    required: true
-  },
-  cargaLimite: { 
-    type: String,
-    required: true
-  },
-  horasEquivalentes: { 
-    type: String,
-    required: true
-  }
-});
+const CreateSchema = new mongoose.Schema(getSchema);
 
 const CreateModel = mongoose.model('AtividadesComplementares', CreateSchema);
 

@@ -1,7 +1,8 @@
 const User = require('../models/UserModel');
 
 exports.index = (req, res) => {
-  res.render('includes/signup-users', {})
+  console.log(req.session.user);
+  res.render('includes/signup-users', { userId: {} })
 }
 exports.indexLogin = (req, res) => {
   res.render('includes/login')
@@ -88,9 +89,11 @@ exports.login = async function(req, res) {
       return;
     }
 
+    const usersList = await login.searchUsers();
+
     req.session.user = login.user;
     req.session.save(function() {
-      return res.render('includes/users');
+      return res.render('includes/users', { usersList });
     });
   } catch (error) {
     console.log(error);
