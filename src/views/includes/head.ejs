@@ -227,6 +227,9 @@
     }
 
   </style>
+  <script>
+    console.log('hello world');
+  </script>
 </head>
 <body>
   <!-- HEADER -->
@@ -238,19 +241,31 @@
       </div>
       <ul class="nav">
         <% if(user) { %>
-        <li class="nav-item">
+          <% console.log(user.typeUser) %>
+        <% if(user && user.typeUser === 'Aluno') { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/solicitacoes">Envio de solicitação</a>
+          </li>
+        <% } else if (user && user.typeUser === 'Administrador'){%>
+          <li class="nav-item">
           <a class="nav-link" href="/usuarios">Usuários</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/aac">Atividades Complementares</a>
         </li>
+        <%} else if (user && user.typeUser === 'Coordenação'){%>
+          <li class="nav-item">
+          <a class="nav-link" href="/usuarios">Usuários</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/aac">Atividades Complementares</a>
+        </li>
+        <%}%>
         <li class="nav-item">
           <a class="nav-link" href="/login-noToken">Sair</a>
         </li>
-        <%} else {%>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
+      <%} else {%>
+        
+        <%}%>
       </ul>
-      <%}%>
     </div>

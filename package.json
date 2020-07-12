@@ -24,7 +24,9 @@
     "express-session": "^1.17.1",
     "helmet": "^3.23.3",
     "material-design-icons": "^3.0.1",
+    "moment": "^2.27.0",
     "mongoose": "^5.9.21",
+    "node-iframe-replacement": "^1.0.0",
     "regenerator-runtime": "^0.13.3",
     "style-loader": "^1.0.0",
     "validator": "^13.1.1"

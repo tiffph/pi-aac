@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcryptjs = require('bcryptjs');
 const getSchema = require('../../common/user-schema.json');
+const moment = require('moment');
 
 const UserSchema = new mongoose.Schema(getSchema);
 
@@ -117,7 +118,9 @@ class User {
       await this.userExists();
       if (this.errors.length > 0) return;
     }
-    
+
+    const now = moment();
+    now.format('LLL');
 
     this.submit();
     if(this.errors.length > 0) return;

@@ -1,0 +1,26 @@
+{
+  "idAluno" : {
+    "type": "String",
+    "required": true
+  },
+  "totalHoras" : {
+    "type" : "number",
+    "required" : false
+  },
+  "horasEnsino" : {
+    "type" : "number",
+    "required" : true
+  },
+  "horasPesquisa" : {
+    "type" : "number",
+    "required" : true
+  },
+  "horasExtensao" : {
+    "type" : "number",
+    "required" : true
+  },
+  "horasValidas" : {
+    "type" : "number",
+    "required" : false
+  }
+}

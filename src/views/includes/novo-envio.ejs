@@ -1,31 +1,33 @@
 <%- include('head') %>
 
+<%console.log(envioId);%>
 <div class="full-screen signup-user">
   <div class="container-fluid">
-    <nav aria-label="breadcrumb">
+    <nav aria-label="breadcrumb" class="content-header-breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/home/usuarios">Usuários</a></li>
-        <% if(userId._id) {%>
-          <li class="breadcrumb-item active" aria-current="page">Editar usuário</li>
+        <li class="breadcrumb-item"><a href="/solicitacoes">Solicitações</a></li>
+        <% if(envioId._id) {%>
+          <li class="breadcrumb-item active" aria-current="page">Editar envio</li>
         <% } else {%>
-          <li class="breadcrumb-item active" aria-current="page">Criar usuário</li>
+          <li class="breadcrumb-item active" aria-current="page">Criar solicitação</li>
         <% }%>
       </ol>
+      <span><a href="/solicitacao/novo-envio/regulamento" target="blank">Ver Regulamento</a></span>
     </nav>
     <div class="card">
       <%- include('messages') %>
-      <% if(userId._id) {%>
+      <% if(envioId._id) {%>
         <div style="width: 100%;">
           <div class="alert alert-warning" style="margin: 0 auto 1rem;">
-            <%= `Você está editando o usuário ${userId ? userId.name : ''}` %>
+            <%= `Você está editando o envio de atividade ${envioId ? envioId.atividade : ''}` %>
           </div>
         </div>
       <% }%>
       <div class="card-body">
-        <% if(userId._id) {%>
-          <h5>Edição de usuário</h5>
+        <% if(envioId._id) {%>
+          <h5>Edição de envio</h5>
         <% } else {%>
-          <h5>Cadastro de usuário</h5>
+          <h5>Envio de solicitação</h5>
         <% }%>
         <p>
           Lorem ipsum a iaculis purus curae mi est habitasse nam auctor sed, class luctus feugiat sociosqu nulla est
@@ -33,31 +35,44 @@
           urna tristiq.
         </p>
 
-        <% if (userId._id) { %>
-          <form class="signup-form" action="/usuarios/edit/<%= userId._id %>" method="POST">
+        <% if (envioId._id) { %>
+          <form class="envio-form" action="/usuarios/edit/<%= envioId._id %>" method="POST">
         <% } else { %>
-          <form class="signup-form" action="/usuarios" method="POST">
+          <form class="envio-form" action="/usuarios" method="POST">
         <% }%>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <div class="form-group">
-            <input value="<%= userId.name %>" type="text" placeholder="Nome completo" class="form-control" id="name" name="name">
+          <div class="input-group set-margin">
+            <div class="input-group-append">
+              <label class="input-group-text" for="input">Atividade</label>
+            </div>
+            <% if(envioId._id) {%>
+              <input value="<%= userId.typeUser %>" type="text" class="form-control" aria-label="Type User" disabled>
+            <% } else {%>
+              <select class="custom-select" id="typeUser" name="typeUser">
+                <%console.log(atividades);%>
+                <% atividades.forEach(res => {%>
+                <option><%=res.atividade%></option>
+                <% });%>
+              </select>
+            <% }%>
           </div>
+          
           <div class="form-group tiny">
             <div class="form-row">
               <div class="col">
-                <input value="<%= userId.matricula %>" type="text" placeholder="Matricula" class="form-control" id="matricula" name="matricula">
+                <input value="<%= envioId.matricula %>" type="text" placeholder="Matricula" class="form-control" id="matricula" name="matricula">
               </div>
               <div class="col">
-                <input value="<%= userId.cpf %>" type="text" placeholder="CPF" class="form-control" id="cpf" name="cpf">
+                <input value="<%= envioId.cpf %>" type="text" placeholder="CPF" class="form-control" id="cpf" name="cpf">
                 <small id="cpfFormat" class="form-text text-muted">Ex: 00000000000</small>
               </div>
             </div>
           </div>
           <div class="form-group">
-            <input value="<%= userId.username %>" type="email" placeholder="Email" class="form-control" id="username" name="username">
+            <input value="<%= envioId.username %>" type="email" placeholder="Email" class="form-control" id="username" name="username">
           </div>
           <div class="form-group">
-            <% if(!userId._id) {%>
+            <% if(!envioId._id) {%>
               <input type="password" placeholder="Senha" class="form-control" id="password" name="password">
             <%} else {%>
               <input type="password" placeholder="*********" disabled class="form-control" id="password" name="password">
@@ -67,8 +82,8 @@
             <div class="input-group-append">
               <label class="input-group-text" for="input">Tipo de usuário</label>
             </div>
-            <% if(userId.typeUser) {%>
-              <input value="<%= userId.typeUser %>" type="text" class="form-control" aria-label="Type User" disabled>
+            <% if(envioId.typeUser) {%>
+              <input value="<%= envioId.typeUser %>" type="text" class="form-control" aria-label="Type User" disabled>
             <% } else {%>
               <select class="custom-select" id="typeUser" name="typeUser">
                 <option selected>Administrador</option>
@@ -82,7 +97,7 @@
             <button type="button" class="btn left-button">
               <a href="/usuarios">Cancelar</a>
             </button>
-            <% if(userId._id) {%>
+            <% if(envioId._id) {%>
               <button type="submit" class="btn right-button">
                 Atualizar
               </button>

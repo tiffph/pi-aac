@@ -1,0 +1,64 @@
+<%- include('head') %>
+
+<div class="full-screen screen-user">
+  <div class="container-fluid">
+    <nav aria-label="breadcrumb" class="content-header-breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Solicitações (<%= envios.length %>)
+
+        </li>
+      </ol>
+      <span><a href="/solicitacao/novo-envio">Nova Solicitação</a></span>
+    </nav>
+    <div class="users-table">
+      <div class="table-responsive set-margin">
+        <table class="table table-borderless table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>Atividade</th>
+              <th>Modalidade</th>
+              <th class="text-center">Status</th>
+              <th>Andamento</th>
+              <th class="text-center">Última modificação</th>
+              <th></th>
+            </tr>
+          </thead>
+      
+          <tbody>
+            <% envios.forEach(envio => {%>
+              <tr>
+                <td class="font-weight-bold"><%= envio.atividade %></td>
+                <td class="text-center"><%= envio.modalidade %></td>
+                <td class="text-center"><%= envio.status %></td>
+                <td class="text-center">
+                  <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </td>
+                <td class="text-center"><%= envio.updatedAt %></td>
+                <td><span class="material-icons edit">
+                  <a href="/usuarios/edit/<%= user._id %>">edit</a>
+                </span></td>
+              </tr>
+            <%}); %>
+            <!-- <tr>
+              <td class="font-weight-bold">Bla</td>
+              <td class="font-weight-bold">Bla</td>
+              <td class="font-weight-bold">Bla</td>
+              <td class="font-weight-bold">
+                <div class="progress">
+                  <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </td>
+              <td class="font-weight-bold">Bla</td>
+              <td><span class="material-icons edit">
+                edit
+              </span></td>
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('footer') %>

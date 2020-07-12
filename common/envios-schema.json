@@ -1,0 +1,46 @@
+{
+  "idAluno" : {
+    "type": "String",
+    "required": true
+  },
+  "status" : {
+    "type" : "String",
+    "required" : true
+  },
+  "approvedByCoo" : {
+    "type" : "String",
+    "required" : true
+  },
+  "approvedBySec" : {
+    "type" : "String",
+    "required" : true
+  },
+  "createdAt" : {
+    "type" : "String",
+    "required" : true
+  },
+  "updatedAt" : {
+    "type" : "String",
+    "required" : true
+  },
+  "modalidade" : {
+    "type" : "String",
+    "required" : true
+  },
+  "atividade" : {
+    "type" : "String",
+    "required" : true
+  },
+  "horasValidadas" : {
+    "type" : "number",
+    "required" : true
+  },
+  "file" : {
+    "type" : "String",
+    "required" : false
+  },
+  "reasonToDeny" : {
+    "type" : "String",
+    "required" : false
+  }
+}

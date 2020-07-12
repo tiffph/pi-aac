@@ -1,16 +1,24 @@
-const Create = require('../models/CreateModel');
+const Aac = require('../models/AacModel');
 
-exports.index = (req, res) => {
-  return res.render('includes/aac');
+exports.index = async (req, res) => {
+  try {
+    const requestList = new Aac(req.body);
+    const aacsList = await requestList.searchAac();
+    console.log(aacsList);
+    return res.render('includes/aac', { aacsList });
+  } catch (error) {
+    console.log(error);
+    return res.render('404');
+  }
 }
 
-exports.indexCreate = (req, res) => {
+exports.indexNewAac = (req, res) => {
   return res.render('includes/aac-new');
 }
 
 exports.create = async (req, res) => {
   try {
-    const create = new Create(req.body);
+    const create = new Aac(req.body);
     await create.create();
 
     if(create.errors.length > 0) {

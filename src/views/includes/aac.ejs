@@ -4,7 +4,9 @@
   <div class="container-fluid">
     <nav aria-label="breadcrumb" class="content-header-breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page">Atividades Acadêmicas Complementares</li>
+        <li class="breadcrumb-item active" aria-current="page">Atividades Acadêmicas Complementares (<%= aacsList.length %>)
+
+        </li>
       </ol>
       <span><a href="/aac/nova-aac">Criar nova</a></span>
     </nav>
@@ -14,35 +16,23 @@
           <thead class="thead-dark">
             <tr>
               <th>Atividade</th>
-              <th>Modalidade</th>
-              <th>Horas Equivalentes</th>
-              <th>Carga horária limite</th>
+              <th class="text-center">Modalidade</th>
+              <th class="text-center">Carga horária limite</th>
               <th></th>
             </tr>
           </thead>
       
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td><span class="material-icons">edit</span></td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-              <td><span class="material-icons">edit</span></td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-              <td><span class="material-icons">edit</span></td>
-            </tr>
+            <% aacsList.forEach(aac => {%>
+              <tr>
+                <td class="font-weight-bold"><%= aac.atividade %></td>
+                <td class="text-center"><%= aac.modalidade %></td>
+                <td class="text-center"><%= aac.cargaLimite %></td>
+                <td><span class="material-icons edit">
+                  <a href="/usuarios/edit/<%= user._id %>">edit</a>
+                </span></td>
+              </tr>
+            <%}); %>
           </tbody>
         </table>
       </div>
