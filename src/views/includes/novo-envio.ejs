@@ -15,6 +15,12 @@
     </nav>
     <div class="card">
       <%- include('messages') %>
+      <div style="width: 100%; display: none;" id="alert-file">
+        <div class="alert alert-danger" style="margin: 0 auto 1rem;">
+          Por favor, selecione um arquivo .pdf, .jpeg, .jpg ou .png
+        </div>
+      </div>
+
       <% if(envioId._id) {%>
         <div style="width: 100%;">
           <div class="alert alert-warning" style="margin: 0 auto 1rem;">
@@ -38,7 +44,7 @@
           <% console.log(envioId._id) %>
           <form class="envio-form" action="/solicitacao/edit/<%= envioId._id %>" method="POST">
         <% } else { %>
-          <form class="envio-form" action="/solicitacao/novo-envio" method="POST">
+          <form class="envio-form" action="/solicitacao/novo-envio/create" method="POST">
         <% }%>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="input-group envio-group">
@@ -79,16 +85,18 @@
             </div>
           </div>
 
-          <div class="input-group mb-3">
+          <div class="input-group set-margin">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+              <span class="input-group-text" id="inputGroupFileAddon01">Declaração</span>
             </div>
             <div class="custom-file">
-              <input type="file" class="custom-file-input" id="file" name="file" aria-describedby="inputGroupFileAddon01">
-              <label class="custom-file-label" for="file">Choose file</label>
+              <input type="file" class="custom-file-input" id="file" name="file" onchange="getFile()" aria-describedby="inputGroupFileAddon01">
+              <label class="custom-file-label" id="labelInput" for="file">Escolha um arquivo</label>
             </div>
           </div>
-          
+
+          <input style="display: none;" type="text" name="fileBase64" id="fileBase64">
+
           <span class="buttons-action">
             <button type="button" class="btn left-button">
               <a href="/usuarios">Cancelar</a>

@@ -27,16 +27,22 @@ class Envio {
 
   async register(idAluno, modalidade) {
     this.cleanUp(idAluno, modalidade);
-    // console.log(this.body);
     await this.validate();
-
+    
     if(this.errors.length > 0) return;
-
     
+    // @TODO validação de horas já registradas por busca na collection horas
+    this.envio = await EnvioModel.create(this.body);
   }
-
+  
   validate() {
-    
+    if(this.body.file.length === 0) {
+      this.errors.push('O envio de um arquivo é obrigatório');
+    }
+    if(this.body.horasEquivalentes.length === 0) {
+      this.errors.push('Duração do evento é obrigatória');
+    }
+
   }
 
   cleanUp(aluno, modalidade) {
@@ -50,7 +56,7 @@ class Envio {
     
     this.body = {
       idAluno: aluno,
-      status: 'pending',
+      status: 'pendingCoo',
       approvedByCoo: '',
       approvedBySec: '',
       createdAt: now,
@@ -58,7 +64,7 @@ class Envio {
       modalidade: modalidade,
       atividade: this.body.atividade,
       horasEquivalentes: this.body.horasEquivalentes,
-      file: this.body.file,
+      file: this.body.fileBase64,
       reasonToDeny: ''
     }
   }

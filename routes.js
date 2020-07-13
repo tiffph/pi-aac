@@ -35,7 +35,7 @@ route.post('/home/aac', aacController.create);
 route.get('/solicitacoes', enviosController.index);
 route.get('/solicitacao/novo-envio', enviosController.indexNew);
 route.get('/solicitacao/novo-envio/regulamento', enviosController.iframe);
-route.post('/solicitacao/novo-envio', enviosController.create);
-route.post('/solicitacoes/edit/:id', userController.edit);
+route.post('/solicitacao/novo-envio/create', enviosController.create);
+route.post('/solicitacoes/edit/:id', enviosController.edit);
 
 module.exports = route;

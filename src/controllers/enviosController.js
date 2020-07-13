@@ -30,6 +30,7 @@ exports.indexNew = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
+  console.log('oiisi');
   try {
     const idUser = req.session.user._id;
     const create = new Envio(req.body);
@@ -51,6 +52,16 @@ exports.create = async (req, res) => {
     });
     return;
 
+  } catch (error) {
+    console.log(error);
+    return res.render('404');
+  }
+}
+
+exports.edit = async (req, res) => {
+  console.log('oiisi');
+  try {
+    
   } catch (error) {
     console.log(error);
     return res.render('404');

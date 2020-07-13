@@ -27,15 +27,23 @@
           <tbody>
             <% envios.forEach(envio => {%>
               <tr>
-                <td class="font-weight-bold"><%= envio.atividade %></td>
-                <td class="text-center"><%= envio.modalidade %></td>
-                <td class="text-center"><%= envio.status %></td>
+                <td class="font-weight-bold set-width"><%= envio.atividade %></td>
+                <td><%= envio.modalidade %></td>
                 <td class="text-center">
-                  <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                  <% if(envio.status === 'pendingCoo' || envio.status === 'pendingSec') {%>
+                    Em análise
+                  <%} else if (envio.status === 'editing') {%>
+                    Requer edição    
+                  <%} else {%>
+                    Aprovado
+                  <%}%>
+                </td>
+                <td>
+                  <div class="progress <%= envio.status %>">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                 </td>
-                <td class="text-center"><%= envio.updatedAt %></td>
+                <td class="text-center set-size"><%= envio.updatedAt %></td>
                 <td><span class="material-icons edit">
                   <a href="/usuarios/edit/<%= user._id %>">edit</a>
                 </span></td>

@@ -1,7 +1,6 @@
 const User = require('../models/UserModel');
 
 exports.index = (req, res) => {
-  console.log(req.session.user);
   res.render('includes/signup-users', { userId: {} })
 }
 exports.indexLogin = (req, res) => {

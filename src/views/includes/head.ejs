@@ -183,9 +183,19 @@
     .table-hover {
       margin-bottom: 0;
       padding-bottom: 1rem;
+      font-size: 14px;
     }
     table tbody tr {
       background-color: white;
+    }
+    table.table tr td {
+      vertical-align: middle;
+    }
+    table.table tr td.set-width {
+      max-width: 180px;
+    }
+    table.table tr td.set-size {
+      font-size: 12px;
     }
     .custom-file-label::after {
       display: none;
@@ -247,6 +257,40 @@
     .envio-form .set-margin .input-group-prepend .input-group-text{
       font-size: 14px;
     }
+    .pendingSec, .pendingCoo, .editing, .approved {
+      border-radius: 10px;
+      background-color: #f7f7f7 !important;
+      height: 13px;
+    }
+    .pendingCoo .progress-bar{
+      border-radius: 10px;
+      background-color: #f1ac44;
+      width: 50%;
+    }
+    .pendingSec .progress-bar {
+      width: 75%;
+      border-radius: 10px;
+      background-color: #f1ac44;
+    }
+    .editing .progress-bar {
+      border-radius: 10px;
+      width: 25%;
+      background-color: #E06A6A;
+    }
+    .approved .progress-bar {
+      border-radius: 10px;
+      width: 25%;
+    }
+    .pendingCoo, .pendingSec {
+      border: 1px solid #f1ac44;
+    }
+    .editing {
+      border: 1px solid #E06A6A;
+    }
+    .approved {
+      border: 1px solid #9CCCB2;
+    }
+
 
   </style>
   <script>
@@ -260,6 +304,54 @@
       document.getElementById('modalidade').setAttribute('value', a.modalidade); 
     }
 
+    async function getFile() {
+       //File
+      const fileInput = document.getElementById('file');
+      const fileName = fileInput.files[0].name;
+      const fileLabel = document.getElementById("labelInput");
+      fileLabel.innerHTML = fileName;
+    
+      //File Value
+      const filePath = fileInput.value;
+
+      console.log('filePath', filePath);
+
+      // Allowing file type
+      var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.pdf)$/i;
+
+      // Function Validate
+      if (!allowedExtensions.exec(filePath)) {
+        document.getElementById('alert-file').style.display = "block";
+        fileInput.value = '';
+        fileLabel.innerHTML = 'Escolha o arquivo';
+        return false;
+      } else {
+        document.getElementById('alert-file').style.display = "none";
+        function getBase64(getFile, callback) {
+          var reader = new FileReader();
+          reader.readAsDataURL(getFile);
+          reader.onload = function result(x) {
+          var result = reader.result;
+          callback(result);
+          };
+            reader.onerror = function (error) {
+            console.log('Error: ', error);
+          };
+        }
+
+        function handleResult(result) {
+            var stringURL = result;
+            var fileBase64 = document.getElementById('fileBase64');
+            fileBase64.value = stringURL;
+        };
+        
+        let getFile = document.querySelector('input[type=file]').files[0];
+
+        await getBase64(getFile, handleResult);
+      }
+    }
+
+
   </script>
 </head>
 <body>
@@ -272,7 +364,6 @@
       </div>
       <ul class="nav">
         <% if(user) { %>
-          <% console.log(user.typeUser) %>
         <% if(user && user.typeUser === 'Aluno') { %>
           <li class="nav-item">
             <a class="nav-link" href="/solicitacoes">Envio de solicitação</a>
