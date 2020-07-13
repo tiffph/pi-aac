@@ -33,7 +33,24 @@ exports.create = async (req, res) => {
   try {
     const idUser = req.session.user._id;
     const create = new Envio(req.body);
-    await create.register(idUser);
+    const searchActivity = new Atividades(req.body);
+    const getModalidade = await searchActivity.getModalidade(req.body.atividade);
+    await create.register(idUser, getModalidade);
+
+    if (create.errors.length > 0) {
+      req.flash('errors', create.errors);
+      req.session.save(function() {
+        return res.redirect('back');
+      });
+      return;
+    }
+
+    req.flash('success', 'Solicitação enviada com sucesso');
+    req.session.save(function() {
+       return res.redirect('/solicitacoes');
+    });
+    return;
+
   } catch (error) {
     console.log(error);
     return res.render('404');

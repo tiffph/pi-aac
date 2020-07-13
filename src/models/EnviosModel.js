@@ -25,8 +25,9 @@ class Envio {
     }
   }
 
-  async register(idAluno) {
-    this.cleanUp(idAluno);
+  async register(idAluno, modalidade) {
+    this.cleanUp(idAluno, modalidade);
+    // console.log(this.body);
     await this.validate();
 
     if(this.errors.length > 0) return;
@@ -34,7 +35,33 @@ class Envio {
     
   }
 
+  validate() {
+    
+  }
 
+  cleanUp(aluno, modalidade) {
+    for (const key in this.body) {
+      if (typeof this.body[key] !== 'string') {
+        this.body[key] = '';
+      }
+    }
+    
+    const now = moment().format('LLL');
+    
+    this.body = {
+      idAluno: aluno,
+      status: 'pending',
+      approvedByCoo: '',
+      approvedBySec: '',
+      createdAt: now,
+      updatedAt: now,
+      modalidade: modalidade,
+      atividade: this.body.atividade,
+      horasEquivalentes: this.body.horasEquivalentes,
+      file: this.body.file,
+      reasonToDeny: ''
+    }
+  }
 
 }
 

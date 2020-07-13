@@ -1,6 +1,5 @@
 <%- include('head') %>
 
-<%console.log(envioId);%>
 <div class="full-screen signup-user">
   <div class="container-fluid">
     <nav aria-label="breadcrumb" class="content-header-breadcrumb">
@@ -12,7 +11,7 @@
           <li class="breadcrumb-item active" aria-current="page">Criar solicitação</li>
         <% }%>
       </ol>
-      <span><a href="/solicitacao/novo-envio/regulamento" target="blank">Ver Regulamento</a></span>
+      <!-- <span><a href="/solicitacao/novo-envio/regulamento" target="blank">Ver Regulamento</a></span> -->
     </nav>
     <div class="card">
       <%- include('messages') %>
@@ -36,63 +35,60 @@
         </p>
 
         <% if (envioId._id) { %>
-          <form class="envio-form" action="/usuarios/edit/<%= envioId._id %>" method="POST">
+          <% console.log(envioId._id) %>
+          <form class="envio-form" action="/solicitacao/edit/<%= envioId._id %>" method="POST">
         <% } else { %>
-          <form class="envio-form" action="/usuarios" method="POST">
+          <form class="envio-form" action="/solicitacao/novo-envio" method="POST">
         <% }%>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <div class="input-group set-margin">
+          <div class="input-group envio-group">
             <div class="input-group-append">
               <label class="input-group-text" for="input">Atividade</label>
             </div>
             <% if(envioId._id) {%>
-              <input value="<%= userId.typeUser %>" type="text" class="form-control" aria-label="Type User" disabled>
+              <input value="<%= envioId.atividade %>" type="text" class="form-control" aria-label="Type User" disabled>
             <% } else {%>
-              <select class="custom-select" id="typeUser" name="typeUser">
-                <%console.log(atividades);%>
+              <select class="custom-select" onchange="setModalidade(this, <%= JSON.stringify(atividades) %>)" id="atividade" name="atividade">
                 <% atividades.forEach(res => {%>
-                <option><%=res.atividade%></option>
+                <option value="<%=res.atividade%>"><%=res.atividade%></option>
                 <% });%>
               </select>
             <% }%>
           </div>
           
-          <div class="form-group tiny">
+          <div class="form-group">
             <div class="form-row">
               <div class="col">
-                <input value="<%= envioId.matricula %>" type="text" placeholder="Matricula" class="form-control" id="matricula" name="matricula">
+                <input value="<%= envioId.horasEquivalentes %>" type="text" placeholder="Duração do evento" class="form-control" id="horasEquivalentes" name="horasEquivalentes">
               </div>
               <div class="col">
-                <input value="<%= envioId.cpf %>" type="text" placeholder="CPF" class="form-control" id="cpf" name="cpf">
-                <small id="cpfFormat" class="form-text text-muted">Ex: 00000000000</small>
+                <%if (envioId._id) {%>
+                  <input value="<%= envioId.modalidade %>" type="text" placeholder="Modalidade" disabled class="form-control" id="modalidade" name="modalidade">
+                <%} else {%>
+                  <%if(atividades.length > 0) {%>
+                    <%for(let i = 0; i <= atividades.length; i++) {%>
+                      <%if (i==0) {%>
+                        <input value="<%= atividades[0].modalidade %>" type="text" placeholder="Modalidade" disabled class="form-control" id="modalidade" name="modalidade">
+                      <%}%>
+                    <%}%>
+                  <%} else {%>
+                    <input value="<%= envioId.modalidade %>" type="text" placeholder="Modalidade" disabled class="form-control" id="modalidade" name="modalidade">
+                  <%}%>
+                <%}%>
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <input value="<%= envioId.username %>" type="email" placeholder="Email" class="form-control" id="username" name="username">
-          </div>
-          <div class="form-group">
-            <% if(!envioId._id) {%>
-              <input type="password" placeholder="Senha" class="form-control" id="password" name="password">
-            <%} else {%>
-              <input type="password" placeholder="*********" disabled class="form-control" id="password" name="password">
-            <%}%>
+
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
             </div>
-          <div class="input-group set-margin">
-            <div class="input-group-append">
-              <label class="input-group-text" for="input">Tipo de usuário</label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="file" name="file" aria-describedby="inputGroupFileAddon01">
+              <label class="custom-file-label" for="file">Choose file</label>
             </div>
-            <% if(envioId.typeUser) {%>
-              <input value="<%= envioId.typeUser %>" type="text" class="form-control" aria-label="Type User" disabled>
-            <% } else {%>
-              <select class="custom-select" id="typeUser" name="typeUser">
-                <option selected>Administrador</option>
-                <option>Aluno</option>
-                <option>Secretaria</option>
-                <option>Coordenação</option>
-              </select>
-            <% }%>
           </div>
+          
           <span class="buttons-action">
             <button type="button" class="btn left-button">
               <a href="/usuarios">Cancelar</a>

@@ -4,7 +4,6 @@ exports.index = async (req, res) => {
   try {
     const requestList = new Aac(req.body);
     const aacsList = await requestList.searchAac();
-    console.log(aacsList);
     return res.render('includes/aac', { aacsList });
   } catch (error) {
     console.log(error);

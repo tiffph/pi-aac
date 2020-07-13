@@ -4,7 +4,7 @@
   <div class="container-fluid">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/home/usuarios">Usuários</a></li>
+        <li class="breadcrumb-item"><a href="/usuarios">Usuários</a></li>
         <% if(userId._id) {%>
           <li class="breadcrumb-item active" aria-current="page">Editar usuário</li>
         <% } else {%>
@@ -36,7 +36,7 @@
         <% if (userId._id) { %>
           <form class="signup-form" action="/usuarios/edit/<%= userId._id %>" method="POST">
         <% } else { %>
-          <form class="signup-form" action="/usuarios" method="POST">
+          <form class="signup-form" action="/home/usuarios" method="POST">
         <% }%>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="form-group">

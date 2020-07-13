@@ -58,6 +58,15 @@ class Create {
     }
   }
 
+  async getModalidade(idAtividade) {
+    try {
+      const search = await AacModel.find({atividade : idAtividade});
+      return search[0].modalidade;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async searchAac() {
     try {
       const aacsList = await AacModel.find().sort({ atividade: -1 });

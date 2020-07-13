@@ -9,11 +9,11 @@
   },
   "approvedByCoo" : {
     "type" : "String",
-    "required" : true
+    "required" : false
   },
   "approvedBySec" : {
     "type" : "String",
-    "required" : true
+    "required" : false
   },
   "createdAt" : {
     "type" : "String",
@@ -31,13 +31,13 @@
     "type" : "String",
     "required" : true
   },
-  "horasValidadas" : {
+  "horasEquivalentes" : {
     "type" : "number",
     "required" : true
   },
   "file" : {
     "type" : "String",
-    "required" : false
+    "required" : true
   },
   "reasonToDeny" : {
     "type" : "String",
