@@ -282,7 +282,8 @@
     }
     .approved .progress-bar {
       border-radius: 10px;
-      width: 25%;
+      width: 100%;
+      background-color: #9CCCB2;
     }
     .pendingCoo, .pendingSec {
       border: 1px solid #f1ac44;
@@ -290,7 +291,7 @@
     .editing {
       border: 1px solid #E06A6A;
     }
-    .priority-high, .priority-high:hover{
+    .priority-high, .priority-high:hover, .priority-high:focus{
       color: #E06A6A;
     }
     .approved {
@@ -303,12 +304,10 @@
       padding: .375rem .75rem;
     }
     .change-activity {
-      margin-top: -15px;
       text-align: left;
-      margin-bottom: 20px;
-      cursor: pointer;
-      text-decoration: underline;
-      color: #1CA392;
+      cursor: default;
+      margin-bottom: 5px;
+      color: #1CA392 !important;
     }
     .insert-link {
       width: 100%;
@@ -347,13 +346,18 @@
       text-decoration: underline;
       color: #1CA392;
     }
+    .status-approved {
+      cursor: default;
+      color: #9CCCB2 !important;
+    }
+    .need-edition {
+      color: #f1ac44 !important;
+    }
   </style>
   <script>
     function setModalidade(ev, be) {
-      console.log(be);
       const select = document.getElementById('atividade');
       const optionSelected = select.options[select.selectedIndex].value;
-      console.log('optionSelected', optionSelected);
 
       const a = be.find(a => a.atividade === optionSelected);
       document.getElementById('modalidade').setAttribute('value', a.modalidade); 
@@ -452,44 +456,8 @@
         await getBase64(getFile, handleResult);
       }
     }
-
-
   </script>
 </head>
 <body>
   <!-- HEADER -->
   <div class="fluid-content">
-    <div class="header container-fluid">
-      <div class="logo">
-        <span class="material-icons school">school</span>
-        <span class="text">SENAI</span>
-      </div>
-      <ul class="nav">
-        <% if(user) { %>
-        <% if(user && user.typeUser === 'Aluno') { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/solicitacoes">Envio de solicitação</a>
-          </li>
-        <% } else if (user && user.typeUser === 'Administrador'){%>
-          <li class="nav-item">
-          <a class="nav-link" href="/usuarios">Usuários</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/aac">Atividades Complementares</a>
-        </li>
-        <%} else if (user && user.typeUser === 'Coordenação'){%>
-          <li class="nav-item">
-          <a class="nav-link" href="/usuarios">Usuários</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/aac">Atividades Complementares</a>
-        </li>
-        <%}%>
-        <li class="nav-item">
-          <a class="nav-link" href="/login-noToken">Sair</a>
-        </li>
-      <%} else {%>
-        
-        <%}%>
-      </ul>
-    </div>

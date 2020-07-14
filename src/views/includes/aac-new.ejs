@@ -1,4 +1,5 @@
 <%- include('head') %>
+<%- include('../nav-admin') %>
 
 <div class="full-screen aac-content">
   <div class="container-fluid">
@@ -23,20 +24,18 @@
           <div class="form-group">
             <input type="text" placeholder="Nome completo" class="form-control" id="atividade" name="atividade">
           </div>
-          <div class="form-group">
-            <select class="form-control" placeholder="Modalidade" id="modalidade" name="modalidade">
-              <option selected>Ensino</option>
-              <option>Pesquisa</option>
-              <option>Extensão</option>
-            </select>
-          </div>
-          <div class="form-group tiny">
+            
+          <div class="form-group set-margin">
             <div class="form-row">
               <div class="col">
-                <input type="text" placeholder="Carga limite" class="form-control" id="cargaLimite" name="cargaLimite">
+                <select class="form-control" placeholder="Modalidade" id="modalidade" name="modalidade">
+                  <option selected>Ensino</option>
+                  <option>Pesquisa</option>
+                  <option>Extensão</option>
+                </select>
               </div>
               <div class="col">
-                <input type="text" placeholder="Horas equivalentes" class="form-control" id="horasEquivalentes" name="horasEquivalentes">
+                <input type="text" placeholder="Carga Limite" class="form-control" id="cargaLimite" name="cargaLimite">
               </div>
             </div>
           </div>

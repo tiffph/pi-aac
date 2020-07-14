@@ -2,9 +2,28 @@ const Aac = require('../models/AacModel');
 
 exports.index = async (req, res) => {
   try {
+    const idUser = req.session.user;
     const requestList = new Aac(req.body);
-    const aacsList = await requestList.searchAac();
-    return res.render('includes/aac', { aacsList });
+
+    if(idUser) {
+      if(idUser.typeUser === 'Aluno') {
+        return res.render('sem-permicao');
+      
+      } else if (idUser.typeUser === 'Administrador') {
+        const aacsList = await requestList.searchAac();
+        console.log(aacsList);
+        return res.render('includes/aac', { aacsList });
+        
+      } else if (idUser.typeUser === 'Coordenação') {
+        return res.render('sem-permicao');
+      
+      } else if (idUser.typeUser === 'Secretaria') {
+        return res.render('sem-permicao');
+      }
+    } else {
+      return res.render('404');
+    }
+
   } catch (error) {
     console.log(error);
     return res.render('404');
@@ -12,7 +31,17 @@ exports.index = async (req, res) => {
 }
 
 exports.indexNewAac = (req, res) => {
-  return res.render('includes/aac-new');
+  const idUser = req.session.user;
+
+    if(idUser) {
+      if (idUser.typeUser === 'Administrador') {
+        return res.render('includes/aac-new');
+      } else {
+        return res.render('sem-permicao');
+      } 
+    } else {
+      return res.render('404');
+    }
 }
 
 exports.create = async (req, res) => {
@@ -32,3 +61,5 @@ exports.create = async (req, res) => {
     console.log(error);
   }
 }
+
+// @TODO EDIT AND REMOVE

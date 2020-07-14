@@ -1,4 +1,12 @@
 <%- include('head') %>
+if(user === 'Aluno') {
+  <%- include('../nav-aluno') %>
+} else if(user === 'Coordenação') {
+  <%- include('../nav-coo') %>
+} else if(user === 'Secretaria') {
+  <%- include('../nav-sec') %>
+}
+
 
 <div class="full-screen signup-user">
   <div class="container-fluid">
@@ -62,25 +70,31 @@
         <% if (envioId._id && user === 'Aluno') { %>
           <% console.log(envioId._id) %>
           <form class="envio-form" action="/solicitacao/edit/<%= envioId._id %>" method="POST">
-        <% } else if (envioId._id && user === 'Coordenação') { %>
-          <form class="envio-form" action="/solicitacao/view/coordenacao/<%= envioId._id %>" method="POST">
-        <% } else if (envioId._id && user === 'Secretaria') { %>
-          <form class="envio-form" action="/solicitacao/view/secretaria/<%= envioId._id %>" method="POST">
+        <% } else if (envioId._id && (user === 'Coordenação' || user === 'Secretaria')) { %>
+          <form class="envio-form" action="/solicitacao/view/avaliacao/<%= envioId._id %>" method="POST">
         <% } else  { %>
           <form class="envio-form" action="/solicitacao/novo-envio/create" method="POST">
         <% }%>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          
+          <%if (envioId._id) {%>
+            <small id="change" class="form-text text-muted change-activity">Selecione a atividade correspondente:</small>
+          <%}%>
           <div class="input-group envio-group">
             <div class="input-group-append">
               <label class="input-group-text" for="input">Atividade</label>
             </div>
+
             <%if (envioId._id) {%>
-              <input type="text" class="form-control" disabled value="<%= envioId.atividade %>" aria-label="atividade" id="atividadeSet" aria-describedby="basic-addon1">
-              <select class="custom-select" style="display: none;" onchange="setModalidade(this, <%= JSON.stringify(atividades) %>)" id="atividade" name="atividade">
+              <input type="text" class="form-control" style="display: none;" disabled value="<%= envioId.atividade %>" aria-label="atividade" id="atividadeSet" name="atividade" aria-describedby="basic-addon1">
+              
+              <select class="custom-select" onchange="setModalidade(this, <%= JSON.stringify(atividades) %>)" id="atividade" name="atividade">
                 <% atividades.forEach(res => {%>
                 <option value="<%=res.atividade%>"><%=res.atividade%></option>
                 <% });%>
               </select>
+
+
             <%} else {%>
               <select class="custom-select" onchange="setModalidade(this, <%= JSON.stringify(atividades) %>)" id="atividade" name="atividade">
                 <% atividades.forEach(res => {%>
@@ -90,8 +104,6 @@
             <%}%>
           </div>
 
-          <small id="change" onclick="changeActivity()" class="form-text text-muted change-activity">Alterar atividade</small>
-          <small style="display: none;" id="cancel" onclick="setActivity()" class="form-text text-muted change-activity">Cancelar</small>
           
           <div class="form-group">
             <div class="form-row">
@@ -101,14 +113,17 @@
               <div class="col">
                 <%if (envioId._id) {%>
                   <input value="<%= envioId.modalidade %>" type="text" placeholder="Modalidade" disabled class="form-control" id="modalidade" name="modalidade">
-                <%} else {%>
-                  <%if(atividades.length > 0) {%>
+
+                  <%} else {%>
+
+                    <%if(atividades.length > 0) {%>
                     <%for(let i = 0; i <= atividades.length; i++) {%>
                       <%if (i==0) {%>
                         <input value="<%= atividades[0].modalidade %>" type="text" placeholder="Modalidade" disabled class="form-control" id="modalidade" name="modalidade">
                       <%}%>
                     <%}%>
-                  <%} else {%>
+
+                    <%} else {%>
                     <input value="<%= envioId.modalidade %>" type="text" placeholder="Modalidade" disabled class="form-control" id="modalidade" name="modalidade">
                   <%}%>
                 <%}%>
@@ -128,10 +143,16 @@
               <span id="setUpload" class="insert-link"><a href="/solicitacao/view/<%= envioId._id %>/upload" target="blank">Ver arquivo
                 <span class="material-icons">insert_link</span>
               </a></span>
-            <%} else if (!envioId._id && user === 'Aluno'){%>
+
+              <%} else if (!envioId._id && user === 'Aluno'){%>
               <input type="file" class="custom-file-input" id="file" name="file" onchange="getFile()" aria-describedby="inputGroupFileAddon01">
               <label class="custom-file-label" id="labelInput" for="file">Escolha um arquivo</label>
-            <%}%>
+
+              <%} else if (envioId._id && user !== 'Aluno'){%>
+              <span id="setUpload" class="insert-link"><a href="/solicitacao/view/<%= envioId._id %>/upload" target="blank">Ver arquivo
+                <span class="material-icons">insert_link</span>
+              </a></span>
+              <%}%>
             </div>
           </div>
           <%if (envioId._id && user === 'Aluno') {%>
@@ -178,14 +199,16 @@
               <button type="submit" class="btn right-button">
                 Atualizar
               </button>
-            <% } else if (envioId._id && (user === 'Coordenação' || user === 'Secretaria')) { %>
+
+              <% } else if (envioId._id && (user === 'Coordenação' || user === 'Secretaria')) { %>
                 <button type="button" data-toggle="modal" data-target="#staticBackdrop" class="btn left-button">
                   Reprovar
                 </button>
                 <button type="submit" class="btn right-button">
                   Aprovar
                 </button>
-            <% } else  { %>
+
+                <% } else  { %>
               <button type="button" class="btn left-button">
                 <a href="/usuarios">Cancelar</a>
               </button>

@@ -11,26 +11,25 @@ exports.index = async (req, res) => {
   try {
     const idUser = req.session.user;
     const request = new Envio(req.body);
-    const requestUser = new User(req.body);
     let envios;
-    let userList;
 
-    if(idUser.typeUser === 'Aluno') {
-      envios = await request.listRequests(idUser._id);
-      return res.render('includes/envios', { envios, user: idUser.typeUser, aluno: {} });
-    
-    } else if (idUser.typeUser === 'Administrador') {
-      return res.render('sem-permicao');
-    
-    } else if (idUser.typeUser === 'Coordenação') {
-      envios = await request.listCoo();
-      userList = await requestUser.searchUsers();
-      return res.render('includes/envios', { envios, user: idUser.typeUser, userList });
-    
-    } else if (idUser.typeUser === 'Secretaria') {
-      envios = await request.listSec();
-      return res.render('includes/envios', { envios, user: idUser.typeUser, userList });
-    
+    if(idUser) {
+      if(idUser.typeUser === 'Aluno') {
+        envios = await request.listRequests(idUser._id);
+        return res.render('includes/envios', { envios, user: idUser.typeUser });
+      
+      } else if (idUser.typeUser === 'Administrador') {
+        return res.render('sem-permicao');
+      
+      } else if (idUser.typeUser === 'Coordenação') {
+        envios = await request.listCoo();
+        return res.render('includes/envios', { envios, user: idUser.typeUser });
+      
+      } else if (idUser.typeUser === 'Secretaria') {
+        envios = await request.listSec();
+        return res.render('includes/envios', { envios, user: idUser.typeUser });
+      
+      }
     } else {
       return res.render('404');
     }
@@ -43,9 +42,18 @@ exports.index = async (req, res) => {
 exports.indexNew = async (req, res) => {
   try {
     const idUser = req.session.user;
-    const request = new Atividades(req.body);
-    const atividades = await request.searchAac();
-    res.render('includes/novo-envio', { envioId: {}, atividade, user: idUser.typeUser })
+
+    if(idUser) {
+      if (idUser.typeUser === 'Aluno') {
+        const request = new Atividades(req.body);
+        const atividades = await request.searchAac();
+        res.render('includes/novo-envio', { envioId: {}, atividades, user: idUser.typeUser })
+      } else {
+        return res.render('sem-permicao');
+      } 
+    } else {
+      return res.render('404');
+    }
   } catch (error) {
     console.log(error);
     return res.render('404');
@@ -81,22 +89,30 @@ exports.create = async (req, res) => {
   }
 }
 
-exports.editIndex = async (req, res) => {
+exports.viewIndex = async (req, res) => {
   if(!req.params.id) return res.render('404');
-    
-  const requestAtividades = new Atividades(req.body);
-  const atividades = await requestAtividades.searchAac();
-  
-  const request = new Envio(req.body);
-  const envioId = await request.searchId(req.params.id);
-  
   const idUser = req.session.user;
-  
-  if(!envioId) {
+    
+
+  if(idUser) {
+    if (idUser.typeUser === 'Aluno') {
+      const requestAtividades = new Atividades(req.body);
+      const atividades = await requestAtividades.searchAac();
+      
+      const request = new Envio(req.body);
+      const envioId = await request.searchId(req.params.id);
+      
+      if(!envioId) {
+        return res.render('404');
+      }
+      
+      return res.render('includes/novo-envio', { envioId, atividades, user: idUser.typeUser });
+    } else {
+      return res.render('sem-permicao');
+    } 
+  } else {
     return res.render('404');
   }
-  
-  return res.render('includes/novo-envio', { envioId, atividades, user: idUser.typeUser });
 }
 
 exports.edit = async (req, res) => {
@@ -126,23 +142,6 @@ exports.edit = async (req, res) => {
   }
 }
 
-exports.viewIndex = async (req, res) => {
-  if(!req.params.id) return res.render('404');
-  
-  const requestAtividades = new Atividades(req.body);
-  const atividades = await requestAtividades.searchAac();
-  
-  const request = new Envio(req.body);
-  const envioId = await request.searchId(req.params.id);
-  
-  const idUser = req.session.user;
-  
-  if(!envioId) {
-    return res.render('404');
-  }
-  
-  return res.render('includes/novo-envio', { envioId, atividades, user: idUser.typeUser });
-}
 
 
 exports.viewDoc = async (req, res) => {

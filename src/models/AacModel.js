@@ -35,7 +35,6 @@ class Create {
     this.cleanUp();
 
     if(this.body.atividade.length === 0) this.errors.push('Atividade é um campo obrigatório');
-    if(this.body.horasEquivalentes.length === 0) this.errors.push('Horas equivalentes é um campo obrigatório');
     return;
   }
 
@@ -52,8 +51,7 @@ class Create {
       this.body = {
         atividade: this.body.atividade,
         modalidade: this.body.modalidade,
-        cargaLimite: this.body.cargaLimite ? this.body.cargaLimite : 'N/A',
-        horasEquivalentes: this.body.horasEquivalentes 
+        cargaLimite: this.body.cargaLimite ? this.body.cargaLimite : 0
       }
     }
   }
@@ -69,7 +67,7 @@ class Create {
 
   async searchAac() {
     try {
-      const aacsList = await AacModel.find().sort({ atividade: -1 });
+      const aacsList = await AacModel.find().sort({ modalidade: 1 });
       return aacsList;
     } catch (error) {
       console.log(error);

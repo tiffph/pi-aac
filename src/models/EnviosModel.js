@@ -38,7 +38,7 @@ class Envio {
   async viewCoo(envioId, user, modalidade) {
     if(typeof envioId !== 'string') return;
 
-    await this.cleanUpCoo(user, modalidade, envioId);
+    await this.cleanUpFunc(user, modalidade, envioId);
     await this.validateEdit();
 
     if (this.errors.length > 0) return;
@@ -54,45 +54,35 @@ class Envio {
     }
   }
 
-  async cleanUpCoo(userId, modalidade, envioId) {
+  async cleanUpFunc(userId, modalidade, envioId) {
     try {
       const envio = await EnvioModel.findById(envioId);
       const user = userId.name;
       const now = moment().format('LLL');
       const deny = this.body.reasonToDeny;
-      console.log(deny);
-      this.body = {
-        status: deny ? 'editing' : 'pendingSec',
-        approvedByCoo: deny ? '' : user,
-        approvedBySec: '',
-        updatedAt: now,
-        modalidade: modalidade,
-        atividade: this.body.atividade ? this.body.atividade : envio.atividade,
-        horasEquivalentes: this.body.horasEquivalentes,
-        reasonToDeny: deny ? deny : ''
+      if (userId.typeUser === 'Secretaria') {
+        this.body = {
+          status:  deny ? 'editing' : 'approved',
+          approvedBySec: deny ? '' : user,
+          updatedAt: now,
+          modalidade: modalidade,
+          atividade: this.body.atividade,
+          horasEquivalentes: this.body.horasEquivalentes,
+          reasonToDeny: deny ? deny : ''
+        }
+      } else {
+        this.body = {
+          status: deny ? 'editing' : 'pendingSec',
+          approvedByCoo: deny ? '' : user,
+          approvedBySec: '',
+          updatedAt: now,
+          modalidade: modalidade,
+          atividade: this.body.atividade,
+          horasEquivalentes: this.body.horasEquivalentes,
+          reasonToDeny: deny ? deny : ''
+        }
       }
-    } catch (error) {
-      console.log(error);
-      this.errors.push('Algo aconteceu. Tente novamente mais tarde.');
-    }
-    
-  }
-
-  async cleanUpSec(userId, modalidade, envioId) {
-    try {
-      const envio = await EnvioModel.findById(envioId);
-      const user = userId.name;
-      const now = moment().format('LLL');
-
-      this.body = {
-        status: 'approved',
-        approvedBySec: user,
-        updatedAt: now,
-        modalidade: modalidade,
-        atividade: this.body.atividade ? this.body.atividade : envio.atividade,
-        horasEquivalentes: this.body.horasEquivalentes,
-        reasonToDeny: ''
-      }
+      
     } catch (error) {
       console.log(error);
       this.errors.push('Algo aconteceu. Tente novamente mais tarde.');
@@ -115,7 +105,6 @@ class Envio {
       const envio = await EnvioModel.findById(envioId);
       const now = moment().format('LLL');
       const deny = envio.reasonToDeny;
-      console.log(deny);
       this.body = {
         status: 'pendingCoo',
         approvedByCoo: '',
@@ -127,7 +116,6 @@ class Envio {
         file: this.body.fileBase64 ? this.body.fileBase64 : envio.file,
         reasonToDeny: deny ? deny : ''
       }
-      console.log(this.body);
     } catch (error) {
       console.log(error);
       this.errors.push('Algo aconteceu. Tente novamente mais tarde.');

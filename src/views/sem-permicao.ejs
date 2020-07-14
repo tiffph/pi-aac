@@ -1,1 +1,59 @@
-<h1>Você não tem permissão pra acessar essa página</h1>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Erro</title>
+  <style>
+    
+    body {
+      font-family: 'Open Sans', sans-serif;
+      color: #292626;
+      text-align: center;
+      background-color: #f3f3f3;
+    }
+    h5 {
+      font-size: 19px;
+      font-weight: 900;
+      margin-top: 60px;
+    }
+    /* 404 */
+    .jumb {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+    }
+    .jumb .bred {
+      font-size: 180px;
+      padding: 30px 50px;
+      margin: 30px 15px;
+      height: 230px;
+      background-color: #e84040;
+      border-radius: 20px;
+    }
+    .jumb .bred.down{
+      margin-top: 120px;
+    }
+    a, a:focus, a:hover {
+      color: #292626;
+      text-decoration: none;
+    }
+    .o-link {
+      text-decoration: underline;
+      font-weight: 900;
+      margin-top: -15px;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="jumb">
+      <div class="bred">O</div>
+      <div class="bred down">P</div>
+      <div class="bred">S</div>
+    </div>
+    <h5>Você não tem acesso a essa página.</h5>
+    <div class="o-link"><a href="/login-noToken">Clique aqui para voltar</a></div>
+  </div>
+</body>
+</html>

@@ -1,4 +1,5 @@
 <%- include('head') %>
+<%- include('../nav') %>
 
 <div class="image-container">
   <div class="container-fluid">
@@ -12,7 +13,7 @@
           urna tristiq.
         </p>
 
-        <form class="login-form" action="/usuarios" method="POST">
+        <form class="login-form" action="/home" method="POST">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="form-group">
             <input type="email" placeholder="Email" class="form-control" id="username" name="username"

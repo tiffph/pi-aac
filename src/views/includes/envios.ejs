@@ -1,4 +1,11 @@
 <%- include('head') %>
+if(user === 'Aluno') {
+  <%- include('../nav-aluno') %>
+} else if(user === 'Coordenação') {
+  <%- include('../nav-coo') %>
+} else if(user === 'Secretaria') {
+  <%- include('../nav-sec') %>
+}
 
 <div class="full-screen screen-user">
   <div class="container-fluid">
@@ -59,12 +66,14 @@
                 </td>
                 <td class="text-center set-size"><%= envio.updatedAt %></td>
                 <td><span class="material-icons edit">
-                  <%if(user === 'Aluno' && envio.status !== 'editing') {%>
-                    <a href="/solicitacao/edit/<%= envio._id %>">edit</a>
+                  <%if(user === 'Aluno' && envio.status !== 'editing' && envio.status !== 'approved') {%>
+                    <a class="need-edition" href="/solicitacao/edit/<%= envio._id %>">edit</a>
                   <%} else if (user === 'Aluno' && envio.status === 'editing'){%>
                     <a class="priority-high" href="/solicitacao/edit/<%= envio._id %>">priority_high</a>
                   <%} else if (user !== 'Aluno'){%>
-                    <a href="/solicitacao/view/<%= envio._id %>">read_more</a>
+                    <a class="need-edition" href="/solicitacao/view/<%= envio._id %>">read_more</a>
+                  <%} else if (user === 'Aluno' && envio.status === 'approved'){%>
+                    <a class="status-approved">check_circle</a>
                   <%}%>
                 </span></td>
               </tr>

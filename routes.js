@@ -6,8 +6,6 @@ const userController = require('./src/controllers/userController');
 const aacController = require('./src/controllers/aacController');
 const enviosController = require('./src/controllers/enviosController');
 
-const { loginRequired } = require('./src/middleware/middleware');
-
 //Rotas home
 route.get('/', homeController.index)
 
@@ -18,7 +16,7 @@ route.post('/home/usuarios', userController.register);
 route.get('/login', userController.indexLogin);
 route.get('/login-noToken', userController.logout);
 // Users Routes
-route.post('/usuarios', userController.login);
+route.post('/home', userController.login);
 route.get('/usuarios', userController.indexUsers);
 // Edit User Routes
 route.get('/usuarios/edit/:id', userController.editIndex);
@@ -41,6 +39,6 @@ route.post('/solicitacao/edit/:id', enviosController.edit);
 
 route.get('/solicitacao/view/:id', enviosController.viewIndex);
 route.get('/solicitacao/view/:id/upload', enviosController.viewDoc);
-route.post('/solicitacao/view/coordenacao/:id', enviosController.viewCoo)
+route.post('/solicitacao/view/avaliacao/:id', enviosController.viewCoo)
 
 module.exports = route;
