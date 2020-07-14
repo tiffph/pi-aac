@@ -1,0 +1,101 @@
+<%- include('head') %>
+
+<div class="full-screen signup-user">
+  <div class="container-fluid">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/usuarios">Usuários</a></li>
+        <% if(userId._id) {%>
+          <li class="breadcrumb-item active" aria-current="page">Editar usuário</li>
+        <% } else {%>
+          <li class="breadcrumb-item active" aria-current="page">Criar usuário</li>
+        <% }%>
+      </ol>
+    </nav>
+    <div class="card">
+      <%- include('messages') %>
+      <% if(userId._id) {%>
+        <div style="width: 100%;">
+          <div class="alert alert-warning" style="margin: 0 auto 1rem;">
+            <%= `Você está editando o usuário ${userId ? userId.name : ''}` %>
+          </div>
+        </div>
+      <% }%>
+      <div class="card-body">
+        <% if(userId._id) {%>
+          <h5>Edição de usuário</h5>
+        <% } else {%>
+          <h5>Cadastro de usuário</h5>
+        <% }%>
+        <p>
+          Lorem ipsum a iaculis purus curae mi est habitasse nam auctor sed, class luctus feugiat sociosqu nulla est
+          accumsan ac nullam scelerisque. netus nullam accumsan imperdiet sit suscipit rhoncus accumsan, mi velit platea
+          urna tristiq.
+        </p>
+
+        <% if (userId._id) { %>
+          <form class="signup-form" action="/usuarios/edit/<%= userId._id %>" method="POST">
+        <% } else { %>
+          <form class="signup-form" action="/home/usuarios" method="POST">
+        <% }%>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="form-group">
+            <input value="<%= userId.name %>" type="text" placeholder="Nome completo" class="form-control" id="name" name="name">
+          </div>
+          <div class="form-group tiny">
+            <div class="form-row">
+              <div class="col">
+                <input value="<%= userId.matricula %>" type="text" placeholder="Matricula" class="form-control" id="matricula" name="matricula">
+              </div>
+              <div class="col">
+                <input value="<%= userId.cpf %>" type="text" placeholder="CPF" class="form-control" id="cpf" name="cpf">
+                <small id="cpfFormat" class="form-text text-muted">Ex: 00000000000</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <input value="<%= userId.username %>" type="email" placeholder="Email" class="form-control" id="username" name="username">
+          </div>
+          <div class="form-group">
+            <% if(!userId._id) {%>
+              <input type="password" placeholder="Senha" class="form-control" id="password" name="password">
+            <%} else {%>
+              <input type="password" placeholder="*********" disabled class="form-control" id="password" name="password">
+            <%}%>
+            </div>
+          <div class="input-group set-margin">
+            <div class="input-group-append">
+              <label class="input-group-text" for="input">Tipo de usuário</label>
+            </div>
+            <% if(userId.typeUser) {%>
+              <input value="<%= userId.typeUser %>" type="text" class="form-control" aria-label="Type User" disabled>
+            <% } else {%>
+              <select class="custom-select" id="typeUser" name="typeUser">
+                <option selected>Administrador</option>
+                <option>Aluno</option>
+                <option>Secretaria</option>
+                <option>Coordenação</option>
+              </select>
+            <% }%>
+          </div>
+          <span class="buttons-action">
+            <button type="button" class="btn left-button">
+              <a href="/usuarios">Cancelar</a>
+            </button>
+            <% if(userId._id) {%>
+              <button type="submit" class="btn right-button">
+                Atualizar
+              </button>
+            <% } else {%>
+              <button type="submit" class="btn right-button">
+                Cadastrar
+              </button>
+            <% }%>
+          </span>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('footer') %>

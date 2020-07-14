@@ -1,5 +1,6 @@
 const Envio = require('../models/EnviosModel');
 const Atividades = require('../models/AacModel');
+const User = require('../models/UserModel');
 
 exports.iframe = (req, res) => {
   return res.render('includes/regulamento');
@@ -8,10 +9,31 @@ exports.iframe = (req, res) => {
 
 exports.index = async (req, res) => {
   try {
-    const idUser = req.session.user._id;
+    const idUser = req.session.user;
     const request = new Envio(req.body);
-    const envios = await request.listRequests(idUser);
-    return res.render('includes/envios', { envios });
+    const requestUser = new User(req.body);
+    let envios;
+    let userList;
+
+    if(idUser.typeUser === 'Aluno') {
+      envios = await request.listRequests(idUser._id);
+      return res.render('includes/envios', { envios, user: idUser.typeUser, aluno: {} });
+    
+    } else if (idUser.typeUser === 'Administrador') {
+      return res.render('sem-permicao');
+    
+    } else if (idUser.typeUser === 'Coordenação') {
+      envios = await request.listCoo();
+      userList = await requestUser.searchUsers();
+      return res.render('includes/envios', { envios, user: idUser.typeUser, userList });
+    
+    } else if (idUser.typeUser === 'Secretaria') {
+      envios = await request.listSec();
+      return res.render('includes/envios', { envios, user: idUser.typeUser, userList });
+    
+    } else {
+      return res.render('404');
+    }
   } catch (error) {
     console.log(error);
     return res.render('404');
@@ -20,17 +42,18 @@ exports.index = async (req, res) => {
 
 exports.indexNew = async (req, res) => {
   try {
+    const idUser = req.session.user;
     const request = new Atividades(req.body);
     const atividades = await request.searchAac();
-    res.render('includes/novo-envio', { envioId: {}, atividades })
+    res.render('includes/novo-envio', { envioId: {}, atividade, user: idUser.typeUser })
   } catch (error) {
     console.log(error);
     return res.render('404');
   }
 }
 
+
 exports.create = async (req, res) => {
-  console.log('oiisi');
   try {
     const idUser = req.session.user._id;
     const create = new Envio(req.body);
@@ -58,10 +81,107 @@ exports.create = async (req, res) => {
   }
 }
 
-exports.edit = async (req, res) => {
-  console.log('oiisi');
-  try {
+exports.editIndex = async (req, res) => {
+  if(!req.params.id) return res.render('404');
     
+  const requestAtividades = new Atividades(req.body);
+  const atividades = await requestAtividades.searchAac();
+  
+  const request = new Envio(req.body);
+  const envioId = await request.searchId(req.params.id);
+  
+  const idUser = req.session.user;
+  
+  if(!envioId) {
+    return res.render('404');
+  }
+  
+  return res.render('includes/novo-envio', { envioId, atividades, user: idUser.typeUser });
+}
+
+exports.edit = async (req, res) => {
+  if(!req.params.id) return res.render('404');
+  try {
+    const searchActivity = new Atividades(req.body);
+    const getModalidade = await searchActivity.getModalidade(req.body.atividade);
+
+    const request = new Envio(req.body);
+    await request.edit(req.params.id, getModalidade);
+
+    if (request.errors.length > 0) {
+      req.flash('errors', request.errors);
+      req.session.save(function() {
+        return res.redirect('back');
+      });
+      return;
+    }
+    req.flash('success', 'Solicitação enviada para a secretaria com sucesso');
+    req.session.save(function() {
+      return res.redirect('/solicitacoes');
+    });
+    return;
+  } catch (error) {
+    console.log(error);
+    return res.render('404');
+  }
+}
+
+exports.viewIndex = async (req, res) => {
+  if(!req.params.id) return res.render('404');
+  
+  const requestAtividades = new Atividades(req.body);
+  const atividades = await requestAtividades.searchAac();
+  
+  const request = new Envio(req.body);
+  const envioId = await request.searchId(req.params.id);
+  
+  const idUser = req.session.user;
+  
+  if(!envioId) {
+    return res.render('404');
+  }
+  
+  return res.render('includes/novo-envio', { envioId, atividades, user: idUser.typeUser });
+}
+
+
+exports.viewDoc = async (req, res) => {
+  if(!req.params.id) return res.render('404');
+  try {
+    const request = new Envio(req.body);
+    const envioId = await request.searchId(req.params.id);
+    const file = envioId;
+    res.render('includes/view-upload', { file })
+  } catch (error) {
+    console.log(error);
+    return res.render('404');
+  }
+}
+
+exports.viewCoo = async (req, res) => {
+  if(!req.params.id) return res.render('404');
+  try {
+    const searchActivity = new Atividades(req.body);
+    const getModalidade = await searchActivity.getModalidade(req.body.atividade);
+
+    const user = new User(req.body);
+    const userRequest = await user.getUserById(req.session.user._id);
+
+    const request = new Envio(req.body);
+    await request.viewCoo(req.params.id, userRequest, getModalidade);
+
+    if (request.errors.length > 0) {
+      req.flash('errors', request.errors);
+      req.session.save(function() {
+        return res.redirect('back');
+      });
+      return;
+    }
+    req.flash('success', 'Solicitação enviada para a secretaria com sucesso');
+    req.session.save(function() {
+      return res.redirect('/solicitacoes');
+    });
+    return;
   } catch (error) {
     console.log(error);
     return res.render('404');

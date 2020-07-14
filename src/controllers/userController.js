@@ -1,7 +1,7 @@
 const User = require('../models/UserModel');
 
 exports.index = (req, res) => {
-  res.render('includes/signup-users', { userId: {} })
+  res.render('includes/novo-usuario', { userId: {} })
 }
 exports.indexLogin = (req, res) => {
   res.render('includes/login')
@@ -48,7 +48,7 @@ exports.editIndex = async (req, res) => {
     return res.render('404');
   }
   
-  return res.render('includes/signup-users', { userId });
+  return res.render('includes/novo-usuario', { userId });
 }
 
 exports.edit = async (req, res) => {

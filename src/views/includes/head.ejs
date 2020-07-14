@@ -204,6 +204,9 @@
       color: #A8A8A8 !important;
       background-color: transparent;
     }
+    textarea {
+      min-height: 90px;
+    }
 
 
     /* LOGIN */
@@ -287,11 +290,63 @@
     .editing {
       border: 1px solid #E06A6A;
     }
+    .priority-high, .priority-high:hover{
+      color: #E06A6A;
+    }
     .approved {
       border: 1px solid #9CCCB2;
     }
-
-
+    .upload {
+      border: 1px solid #ced4da;
+      border-radius: 0px 4px 4px 0px;
+      font-size: 14px;
+      padding: .375rem .75rem;
+    }
+    .change-activity {
+      margin-top: -15px;
+      text-align: left;
+      margin-bottom: 20px;
+      cursor: pointer;
+      text-decoration: underline;
+      color: #1CA392;
+    }
+    .insert-link {
+      width: 100%;
+      text-align: left;
+      font-style: italic;
+    }
+    .insert-link a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .deny-btn {
+      border-radius: 30px;
+      width: 135px;
+      padding: 5px 15px;
+      font-size: 14px;
+      color: white;
+      font-weight: 600;
+    }
+    .deny-btn:hover {
+      color: white;
+    }
+    .deny-btn.ajuste {
+      background-color: #f1ac44;
+      border-color: #f1ac44;
+    }
+    .deny-btn.solicitar {
+      background-color: #1ca392;
+      border-color: #1ca392;
+    }
+    .change-upload {
+      margin-top: -55px;
+      text-align: left;
+      margin-bottom: 60px;
+      cursor: pointer;
+      text-decoration: underline;
+      color: #1CA392;
+    }
   </style>
   <script>
     function setModalidade(ev, be) {
@@ -302,6 +357,53 @@
 
       const a = be.find(a => a.atividade === optionSelected);
       document.getElementById('modalidade').setAttribute('value', a.modalidade); 
+    }
+
+    function changeActivity() {
+      document.getElementById('atividade').style.display = "block";
+      document.getElementById('atividadeSet').style.display = "none";
+
+      document.getElementById('change').style.display = "none";
+      document.getElementById('cancel').style.display = "block";
+    }
+    function setActivity() {
+      document.getElementById('atividade').style.display = "none";
+      document.getElementById('atividadeSet').style.display = "block";
+
+      document.getElementById('cancel').style.display = "none";
+      document.getElementById('change').style.display = "block";
+    }
+
+    function changeUpload() {
+      document.getElementById('file').style.display = "block";
+      document.getElementById('labelInput').style.display = "block";
+      document.getElementById('setUpload').style.display = "none";
+
+      document.getElementById('changeUp').style.display = "none";
+      document.getElementById('cancelUp').style.display = "block";
+    }
+    function setUpload() {
+      document.getElementById('file').style.display = "none";
+      document.getElementById('labelInput').style.display = "none";
+      document.getElementById('setUpload').style.display = "block";
+
+      document.getElementById('cancelUp').style.display = "none";
+      document.getElementById('changeUp').style.display = "block";
+    }
+
+
+    function envioNegado() {
+      const denyValue = document.getElementById('reasonToDeny');
+      console.log('denyValue type', document.getElementById('change-type').type);
+      console.log('denyValue value', denyValue.value);
+      console.log('denyValue length', denyValue.value.length);
+
+      if (denyValue.value.length > 0) {
+        document.getElementById('change-type').type = "submit";
+        document.getElementById('alert-deny').style.display = "none";
+      } else {
+        document.getElementById('alert-deny').style.display = "block";
+      }
     }
 
     async function getFile() {

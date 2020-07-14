@@ -11,7 +11,10 @@
           <li class="breadcrumb-item active" aria-current="page">Criar solicitação</li>
         <% }%>
       </ol>
-      <!-- <span><a href="/solicitacao/novo-envio/regulamento" target="blank">Ver Regulamento</a></span> -->
+      <%if(user !== 'Aluno') {%>
+        <span><a href="/solicitacao/novo-envio/regulamento" target="blank">Ver Regulamento</a></span>
+      <%}%>
+
     </nav>
     <div class="card">
       <%- include('messages') %>
@@ -21,13 +24,29 @@
         </div>
       </div>
 
-      <% if(envioId._id) {%>
+      <% if(envioId._id && user === 'Aluno' ) {%>
         <div style="width: 100%;">
           <div class="alert alert-warning" style="margin: 0 auto 1rem;">
-            <%= `Você está editando o envio de atividade ${envioId ? envioId.atividade : ''}` %>
+            <%= `Você está editando o envio de atividade ${envioId.atividade}` %>
+            <%if (envioId.reasonToDeny.length > 0) {%>
+              <br>
+            <%= `Motivo da recusa: ${envioId.reasonToDeny}` %>
+            <%}%>
+            </div>
+        </div>
+      <% } else if (envioId._id && user === 'Coordenação') {%>
+        <div style="width: 100%;">
+          <div class="alert alert-warning" style="margin: 0 auto 1rem;">
+            <%= `Você está avaliando a solicitação de atividade ${envioId ? envioId.atividade : ''}` %>
           </div>
         </div>
-      <% }%>
+        <% } else if (envioId._id && user === 'Secretaria') {%>
+          <div style="width: 100%;">
+            <div class="alert alert-warning" style="margin: 0 auto 1rem;">
+              <%= `Você está editando o envio de atividade ${envioId ? envioId.atividade : ''}` %>
+            </div>
+          </div>
+        <% } %>
       <div class="card-body">
         <% if(envioId._id) {%>
           <h5>Edição de envio</h5>
@@ -40,10 +59,14 @@
           urna tristiq.
         </p>
 
-        <% if (envioId._id) { %>
+        <% if (envioId._id && user === 'Aluno') { %>
           <% console.log(envioId._id) %>
           <form class="envio-form" action="/solicitacao/edit/<%= envioId._id %>" method="POST">
-        <% } else { %>
+        <% } else if (envioId._id && user === 'Coordenação') { %>
+          <form class="envio-form" action="/solicitacao/view/coordenacao/<%= envioId._id %>" method="POST">
+        <% } else if (envioId._id && user === 'Secretaria') { %>
+          <form class="envio-form" action="/solicitacao/view/secretaria/<%= envioId._id %>" method="POST">
+        <% } else  { %>
           <form class="envio-form" action="/solicitacao/novo-envio/create" method="POST">
         <% }%>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -51,16 +74,24 @@
             <div class="input-group-append">
               <label class="input-group-text" for="input">Atividade</label>
             </div>
-            <% if(envioId._id) {%>
-              <input value="<%= envioId.atividade %>" type="text" class="form-control" aria-label="Type User" disabled>
-            <% } else {%>
+            <%if (envioId._id) {%>
+              <input type="text" class="form-control" disabled value="<%= envioId.atividade %>" aria-label="atividade" id="atividadeSet" aria-describedby="basic-addon1">
+              <select class="custom-select" style="display: none;" onchange="setModalidade(this, <%= JSON.stringify(atividades) %>)" id="atividade" name="atividade">
+                <% atividades.forEach(res => {%>
+                <option value="<%=res.atividade%>"><%=res.atividade%></option>
+                <% });%>
+              </select>
+            <%} else {%>
               <select class="custom-select" onchange="setModalidade(this, <%= JSON.stringify(atividades) %>)" id="atividade" name="atividade">
                 <% atividades.forEach(res => {%>
                 <option value="<%=res.atividade%>"><%=res.atividade%></option>
                 <% });%>
               </select>
-            <% }%>
+            <%}%>
           </div>
+
+          <small id="change" onclick="changeActivity()" class="form-text text-muted change-activity">Alterar atividade</small>
+          <small style="display: none;" id="cancel" onclick="setActivity()" class="form-text text-muted change-activity">Cancelar</small>
           
           <div class="form-group">
             <div class="form-row">
@@ -89,23 +120,75 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="inputGroupFileAddon01">Declaração</span>
             </div>
-            <div class="custom-file">
+            <div class="custom-file upload">
+              <%if (envioId._id && user === 'Aluno') {%>
+              <input style="display: none;" type="file" class="custom-file-input" id="file" name="file" onchange="getFile()" aria-describedby="inputGroupFileAddon01">
+              <label style="display: none;" class="custom-file-label" id="labelInput" for="file">Escolha um arquivo</label>
+
+              <span id="setUpload" class="insert-link"><a href="/solicitacao/view/<%= envioId._id %>/upload" target="blank">Ver arquivo
+                <span class="material-icons">insert_link</span>
+              </a></span>
+            <%} else if (!envioId._id && user === 'Aluno'){%>
               <input type="file" class="custom-file-input" id="file" name="file" onchange="getFile()" aria-describedby="inputGroupFileAddon01">
               <label class="custom-file-label" id="labelInput" for="file">Escolha um arquivo</label>
+            <%}%>
             </div>
           </div>
+          <%if (envioId._id && user === 'Aluno') {%>
+            
+            <small id="changeUp" onclick="changeUpload()" class="form-text text-muted change-upload">Alterar upload</small>
+            <small style="display: none;" id="cancelUp" onclick="setUpload()" class="form-text text-muted change-upload">Cancelar</small>
+          <%}%>
 
           <input style="display: none;" type="text" name="fileBase64" id="fileBase64">
 
+          <%#  MODAL %>
+          <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">Solicitar ajuste</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div style="width: 100%; display: none;" id="alert-deny">
+                    <div class="alert alert-danger" style="margin: 0 auto 1rem;">
+                      Preencha o campo abaixo ou clique em "Ajuste manual"
+                    </div>
+                  </div>
+                  <textarea class="form-control" id="reasonToDeny" placeholder="Digite aqui o motivo da rejeição." name="reasonToDeny"></textarea>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn deny-btn ajuste" data-dismiss="modal">Ajuste manual</button>
+                  <button type="button" id="change-type" onclick="envioNegado()" class="btn deny-btn solicitar">Solicitar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%#  FIM MODAL %>
+
           <span class="buttons-action">
-            <button type="button" class="btn left-button">
-              <a href="/usuarios">Cancelar</a>
-            </button>
-            <% if(envioId._id) {%>
+
+            <% if (envioId._id && user === 'Aluno') { %>
+              <button type="button" class="btn left-button">
+                Excluir
+              </button>
               <button type="submit" class="btn right-button">
                 Atualizar
               </button>
-            <% } else {%>
+            <% } else if (envioId._id && (user === 'Coordenação' || user === 'Secretaria')) { %>
+                <button type="button" data-toggle="modal" data-target="#staticBackdrop" class="btn left-button">
+                  Reprovar
+                </button>
+                <button type="submit" class="btn right-button">
+                  Aprovar
+                </button>
+            <% } else  { %>
+              <button type="button" class="btn left-button">
+                <a href="/usuarios">Cancelar</a>
+              </button>
               <button type="submit" class="btn right-button">
                 Cadastrar
               </button>

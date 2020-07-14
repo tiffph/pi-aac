@@ -1,0 +1,16 @@
+<%-include('head')%>
+<div class="container-fluid">
+  <nav aria-label="breadcrumb" class="content-header-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/solicitacoes">Solicitações</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="/solicitacao/view/<%=file._id%>">Editar envio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Certificado</li>
+    </ol>
+    <span><a href="/solicitacao/view/<%=file._id%>">Voltar</a></span>
+
+  </nav>
+  <div class="embed-responsive embed-responsive-16by9">
+    <embed class="embed-responsive-item" src="<%=file.file%>">
+  </div>
+</div>
+<%-include('footer')%>

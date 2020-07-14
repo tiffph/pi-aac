@@ -36,6 +36,11 @@ route.get('/solicitacoes', enviosController.index);
 route.get('/solicitacao/novo-envio', enviosController.indexNew);
 route.get('/solicitacao/novo-envio/regulamento', enviosController.iframe);
 route.post('/solicitacao/novo-envio/create', enviosController.create);
-route.post('/solicitacoes/edit/:id', enviosController.edit);
+route.get('/solicitacao/edit/:id', enviosController.viewIndex);
+route.post('/solicitacao/edit/:id', enviosController.edit);
+
+route.get('/solicitacao/view/:id', enviosController.viewIndex);
+route.get('/solicitacao/view/:id/upload', enviosController.viewDoc);
+route.post('/solicitacao/view/coordenacao/:id', enviosController.viewCoo)
 
 module.exports = route;

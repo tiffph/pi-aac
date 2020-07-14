@@ -110,7 +110,6 @@ class User {
 
   // EDIT
   async edit(id) {
-    console.log('typeof id', typeof id);
     if(typeof id !== 'string') return;
     const userId = await UserModel.findById(id);
 
@@ -118,9 +117,6 @@ class User {
       await this.userExists();
       if (this.errors.length > 0) return;
     }
-
-    const now = moment();
-    now.format('LLL');
 
     this.submit();
     if(this.errors.length > 0) return;
@@ -141,7 +137,6 @@ class User {
 
   // LOGIN
   async login() {
-    console.log('login')
     await this.validate();
     if(this.errors.length > 0) return;
 
@@ -202,6 +197,11 @@ class User {
   async searchUsers() {
     const usersList = await UserModel.find().sort({ criadoEm: -1});
     return usersList;
+  }
+
+  async getUserById(id) {
+    const userRequest = await UserModel.findById(id);
+    return userRequest;
   }
 }
 
