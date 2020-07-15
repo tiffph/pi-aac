@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 const getSchema = require('../../common/envios-schema.json');
+const getSchemaHoras = require('../../common/horas-schema.json');
 const moment = require('moment');
 
 const EnvioSchema = new mongoose.Schema(getSchema);
+const HorasSchema = new mongoose.Schema(getSchemaHoras);
 
 mongoose.set('useFindAndModify', false);
 const EnvioModel = mongoose.model('Envio', EnvioSchema);
+const HorasModel = mongoose.model('Horas', HorasSchema);
 
 
 class Envio {
@@ -38,11 +41,83 @@ class Envio {
   async viewCoo(envioId, user, modalidade) {
     if(typeof envioId !== 'string') return;
 
-    await this.cleanUpFunc(user, modalidade, envioId);
+    await this.cleanUpFunc(user, modalidade);
     await this.validateEdit();
 
     if (this.errors.length > 0) return;
+    if (this.body.status === 'approved') {
+      await this.approved(envioId, this.body);
+    }
     await this.update(envioId, this.body);
+  }
+
+  async listHoras(idAluno) {
+    const getHoras = await HorasModel.find({idAluno});
+    return getHoras;
+  }
+
+  async approved(envioId, approved) {
+    const getIdAluno = await EnvioModel.findById(envioId);
+    const getHoras = await this.listHoras(getIdAluno.idAluno);
+
+    let horasTotais;
+    let horasEnsino;
+    let horasPesquisa;
+    let horasExtensao;
+    let horasValidas;
+    if(getHoras.length > 0) {
+      horasTotais = getHoras[0].totalHoras;
+      horasEnsino = getHoras[0].horasEnsino;
+      horasPesquisa = getHoras[0].horasPesquisa;
+      horasExtensao = getHoras[0].horasExtensao;
+      horasValidas = getHoras[0].horasValidas;
+    } else {
+      horasTotais = 0;
+      horasEnsino = 0;
+      horasPesquisa = 0;
+      horasExtensao = 0;
+      horasValidas = 0;
+    }
+    const getInt = parseInt(approved.horasEquivalentes, 10);
+
+    horasTotais+=getInt;
+    
+    if (approved.modalidade === 'Ensino'){
+      horasEnsino+=getInt;
+    } else if (approved.modalidade === 'Extensão') {
+      horasExtensao+=getInt;
+    } else if (approved.modalidade === 'Pesquisa') {
+      horasPesquisa+=getInt;
+    }
+
+
+    if (horasValidas >= 58 && (horasPesquisa == 0 || horasEnsino == 0 || horasExtensao == 0)) {
+      if (((horasPesquisa == 0 && horasEnsino == 0) || (horasExtensao == 0 && horasPesquisa == 0) || ( horasEnsino == 0 && horasExtensao == 0))) {
+        horasValidas = horasValidas;
+      } 
+    } else {
+      const check = horasValidas + getInt;
+      if (check >= 60) {
+        horasValidas = 60;
+      } else {
+        horasValidas = check;
+      }
+    }
+    const sendApproved = {
+      idAluno: getIdAluno.idAluno,
+      totalHoras: horasTotais,
+      horasEnsino: horasEnsino,
+      horasPesquisa: horasPesquisa,
+      horasExtensao: horasExtensao,
+      horasValidas: horasValidas
+    };
+    
+    if(getHoras.length > 0) {
+      await HorasModel.findByIdAndUpdate(getHoras[0]._id, sendApproved, { new: true })
+    } else {
+      await HorasModel.create(sendApproved);
+    }
+
   }
 
   async update(id, envioEdit) {
@@ -54,9 +129,8 @@ class Envio {
     }
   }
 
-  async cleanUpFunc(userId, modalidade, envioId) {
+  async cleanUpFunc(userId, modalidade) {
     try {
-      const envio = await EnvioModel.findById(envioId);
       const user = userId.name;
       const now = moment().format('LLL');
       const deny = this.body.reasonToDeny;

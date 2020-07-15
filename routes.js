@@ -37,6 +37,8 @@ route.post('/solicitacao/novo-envio/create', enviosController.create);
 route.get('/solicitacao/edit/:id', enviosController.viewIndex);
 route.post('/solicitacao/edit/:id', enviosController.edit);
 
+route.get('/relatorio-envios', enviosController.show);
+
 route.get('/solicitacao/view/:id', enviosController.viewIndex);
 route.get('/solicitacao/view/:id/upload', enviosController.viewDoc);
 route.post('/solicitacao/view/avaliacao/:id', enviosController.viewCoo)

@@ -95,7 +95,7 @@ exports.viewIndex = async (req, res) => {
     
 
   if(idUser) {
-    if (idUser.typeUser === 'Aluno') {
+    if (idUser.typeUser !== 'Administrador') {
       const requestAtividades = new Atividades(req.body);
       const atividades = await requestAtividades.searchAac();
       
@@ -183,6 +183,34 @@ exports.viewCoo = async (req, res) => {
     return;
   } catch (error) {
     console.log(error);
+    return res.render('404');
+  }
+}
+
+exports.show = async (req, res) => {
+  const idUser = req.session.user;
+    
+  if(idUser) {
+    if (idUser.typeUser === 'Aluno') {
+      
+      try {
+        const request = new Envio(req.body);
+        const horaId = await request.listHoras(idUser._id);
+        if (horaId[0]) {
+          return res.render('includes/relatorio-envios', { getHoras: horaId[0] });
+        } else {
+          return res.render('includes/sem-relatorio');
+        }
+
+      } catch (error) {
+        console.log(error);
+        return res.render('404');
+      }
+      
+    } else {
+      return res.render('sem-permicao');
+    } 
+  } else {
     return res.render('404');
   }
 }

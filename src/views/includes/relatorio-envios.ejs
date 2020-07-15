@@ -1,0 +1,40 @@
+<%- include('head') %>
+<%- include('../nav-aluno') %>
+
+<div class="full-screen screen-user">
+  <div class="container-fluid">
+    <nav aria-label="breadcrumb" class="content-header-breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Relatório de horas por modalidade
+
+        </li>
+      </ol>
+    </nav>
+    <div class="users-table">
+      <div class="table-responsive set-margin">
+        <table class="table table-borderless table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th class="text-center">Horas aprovadas</th>
+              <th class="text-center">Horas em Ensino</th>
+              <th class="text-center">Horas em Pesquisa</th>
+              <th class="text-center">Horas em Extensão</th>
+              <th class="text-center">Horas aprovadas e válidas</th>
+            </tr>
+          </thead>
+      
+          <tbody>
+              <tr>
+                <td class="text-center"><%= getHoras.totalHoras %>h</td>
+                <td class="text-center"><%= getHoras.horasEnsino %>h</td>
+                <td class="text-center"><%= getHoras.horasPesquisa%>h</td>
+                <td class="text-center"><%= getHoras.horasExtensao%>h</td>
+                <td class="text-center"><%= getHoras.horasValidas%>h</td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('footer') %>

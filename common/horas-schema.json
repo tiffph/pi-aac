@@ -5,7 +5,7 @@
   },
   "totalHoras" : {
     "type" : "number",
-    "required" : false
+    "required" : true
   },
   "horasEnsino" : {
     "type" : "number",
@@ -21,6 +21,6 @@
   },
   "horasValidas" : {
     "type" : "number",
-    "required" : false
+    "required" : true
   }
 }
