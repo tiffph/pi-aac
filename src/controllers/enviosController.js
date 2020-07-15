@@ -67,6 +67,17 @@ exports.create = async (req, res) => {
     const create = new Envio(req.body);
     const searchActivity = new Atividades(req.body);
     const getModalidade = await searchActivity.getModalidade(req.body.atividade);
+    const getAtividade = await searchActivity.getAtividade(req.body.atividade);
+    await create.limiteHoras(getAtividade, idUser, req.body.horasEquivalentes);
+    
+    if (create.errors.length > 0) {
+      req.flash('errors', create.errors);
+      req.session.save(function() {
+        return res.redirect('back');
+      });
+      return;
+    }
+    
     await create.register(idUser, getModalidade);
 
     if (create.errors.length > 0) {

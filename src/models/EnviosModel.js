@@ -20,7 +20,7 @@ class Envio {
 
   async listRequests(idAluno) {
     try {
-      const envios = await EnvioModel.find({idAluno: idAluno}).sort({updatedAt: -1});
+      const envios = await EnvioModel.find({idAluno: idAluno}).sort({updatedAt: 1});
       return envios;
     } catch (error) {
       console.log(error);
@@ -30,7 +30,7 @@ class Envio {
 
   async listCoo() {
     try {
-      const envios = await EnvioModel.find({status: 'pendingCoo'}).sort({updatedAt: -1});
+      const envios = await EnvioModel.find({status: 'pendingCoo'}).sort({updatedAt: 1});
       return envios;
     } catch (error) {
       console.log(error);
@@ -222,12 +222,55 @@ class Envio {
     
     if(this.errors.length > 0) return;
     
-    // @TODO validação de horas já registradas por busca na collection horas
     this.envio = await EnvioModel.create(this.body);
   }
   
-  validate() {
+  // validação de horas já registradas por busca na collection horas
+  async limiteHoras(atividade, id, novoEnvioHoras) {
+    try {
+      console.log(atividade);
+      if (atividade.cargaLimite > 0) {
+        const limit = atividade.cargaLimite;
+        const envioAluno = await EnvioModel.find({idAluno: id, atividade: atividade.atividade});
+        
+        if(envioAluno.length > 0) {
+          let horas = 0;
+          for(let i = 0; i < envioAluno.length; i++) {
+            if (envioAluno[i].horasEquivalentes) {
+              if (envioAluno[i].status === 'approved') {
+                console.log(envioAluno[i].horasEquivalentes);
+                horas+= envioAluno[i].horasEquivalentes;
+              }
+            }
+          }
+          console.log(horas);
+          if(horas >= limit) {
+            this.errors.push('Você já atingiu o limite de horas dessa atividade.');
+          } else {
+            const getInt = parseInt(novoEnvioHoras, 10);
+
+            const soma = horas + getInt;
+            console.log(typeof horas);
+
+            console.log(typeof getInt);
+            console.log(soma);
+            const diferenca = limit - horas;
+            if (soma > limit) {
+              this.errors.push(`O limite de horas dessa atividade é ${limit}h e você possui ${horas}h. Você pode inserir no campo a diferença (${diferenca}h).`);
+            }
+          }
+        }
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      this.errors.push('Algo aconteceu. Tente novamente mais tarde.');
+    }
+  }
+  
+  async validate() {
     const horas = isNaN(this.body.horasEquivalentes);
+
     if(this.body.file.length === 0) {
       this.errors.push('O envio de um arquivo é obrigatório');
     }

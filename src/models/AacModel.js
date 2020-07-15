@@ -27,6 +27,16 @@ class Create {
     
   }
 
+  async getAtividade(atividade) {
+    try {
+      const getAtividade = await AacModel.findOne({atividade: atividade});
+      console.log(getAtividade);
+      return getAtividade;
+    } catch (error) {
+      
+    }
+  }
+
   async verifyAac() {
     const verify = await AacModel.findOne({atividade: this.body.atividade});
     return verify ? true : false;
