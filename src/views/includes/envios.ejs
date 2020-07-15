@@ -1,11 +1,11 @@
 <%- include('head') %>
-if(user === 'Aluno') {
+<%if(user === 'Aluno') {%>
   <%- include('../nav-aluno') %>
-} else if(user === 'Coordenação') {
+<%} else if(user === 'Coordenação') {%>
   <%- include('../nav-coo') %>
-} else if(user === 'Secretaria') {
+<%} else if(user === 'Secretaria') {%>
   <%- include('../nav-sec') %>
-}
+<%}%>
 
 <div class="full-screen screen-user">
   <div class="container-fluid">

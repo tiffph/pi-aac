@@ -26,11 +26,11 @@
           <tbody>
             <% aacsList.forEach(aac => {%>
               <tr>
-                <td class="font-weight-bold"><%= aac.atividade %></td>
+                <td style="max-width: 600px;" class="font-weight-bold"><%= aac.atividade %></td>
                 <td class="text-center"><%= aac.modalidade %></td>
                 <td class="text-center"><%= aac.cargaLimite %></td>
                 <td><span class="material-icons edit">
-                  <a href="/usuarios/edit/<%= user._id %>">edit</a>
+                  <a href="/aac/edit/<%= aac._id %>">edit</a>
                 </span></td>
               </tr>
             <%}); %>

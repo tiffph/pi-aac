@@ -27,8 +27,8 @@ route.get('/aac', aacController.index);
 route.get('/aac/nova-aac', aacController.indexNewAac);
 route.post('/home/aac', aacController.create);
 // Edit AAC Routes: TODO 
-// route.get('/usuarios/edit/:id', userController.editIndex);
-// route.post('/usuarios/edit/:id', userController.edit);
+route.get('/aac/edit/:id', aacController.editIndex);
+route.post('/aac/edit/:id', aacController.edit);
 
 route.get('/solicitacoes', enviosController.index);
 route.get('/solicitacao/novo-envio', enviosController.indexNew);

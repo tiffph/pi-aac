@@ -11,7 +11,6 @@ exports.index = async (req, res) => {
       
       } else if (idUser.typeUser === 'Administrador') {
         const aacsList = await requestList.searchAac();
-        console.log(aacsList);
         return res.render('includes/aac', { aacsList });
         
       } else if (idUser.typeUser === 'Coordenação') {
@@ -35,7 +34,7 @@ exports.indexNewAac = (req, res) => {
 
     if(idUser) {
       if (idUser.typeUser === 'Administrador') {
-        return res.render('includes/aac-new');
+        return res.render('includes/aac-new', {aacId: {}});
       } else {
         return res.render('sem-permicao');
       } 
@@ -63,3 +62,49 @@ exports.create = async (req, res) => {
 }
 
 // @TODO EDIT AND REMOVE
+
+exports.editIndex = async (req, res) => {
+  if(!req.params.id) return res.render('404');
+  const idUser = req.session.user;
+  if(idUser) {
+    if (idUser.typeUser === 'Administrador') {
+      const request = new Aac(req.body);
+      const aacId = await request.searchId(req.params.id);
+      
+      if(!aacId) {
+        return res.render('404');
+      }
+      
+      return res.render('includes/aac-new', { aacId });
+    } else {
+      return res.render('sem-permicao');
+    } 
+  } else {
+    return res.render('404');
+  }
+}
+
+exports.edit = async (req, res) => {
+  if(!req.params.id) return res.render('404');
+  try {
+    const request = new Aac(req.body);
+    await request.updateAcc(req.params.id);
+
+    if (request.errors.length > 0) {
+      req.flash('errors', request.errors);
+      req.session.save(function() {
+        return res.redirect('back');
+      });
+      return;
+    }
+
+    req.flash('success', 'Solicitação enviada para a secretaria com sucesso');
+    req.session.save(function() {
+      return res.redirect('/aac');
+    });
+    return;
+  } catch (error) {
+    console.log(error);
+    return res.render('404');
+  }
+}
